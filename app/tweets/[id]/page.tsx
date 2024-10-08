@@ -1,7 +1,9 @@
+import { metadata } from "@/app/layout";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from 'next'
 
 async function getData(id: string) {
     const res = await fetch(`https://raw.githubusercontent.com/kanyewesst/ye-tweets/main/data/${id}.json`)
@@ -23,12 +25,42 @@ async function getData(id: string) {
     }
 }
 
+export async function generateMetadata({ params: { id } }: { params: { id: string }}): Promise<Metadata> {
+    return {
+        title: `Tweet ${id} | Ye Tweets`,
+        description: `View a tweet by Kanye West`,
+        openGraph: {
+            title: `Tweet ${id} | Ye Tweets`,
+            description: `View a tweet by Kanye West on Ye Tweets archive`,
+            images: [
+                {
+                    url: `og.jpg`,
+                    width: 1200,
+                    height: 630,
+                    alt: `Tweet ${id} | Ye Tweets`,
+                },
+            ],
+        }
+    }
+}
+  
+
+
 export default async function Page({ params }: { params: { id: string } }) {
     const data = await getData(params.id);
 
     return (
-        <pre>
-            {data ? JSON.stringify(data, null, 2) : notFound()}
-        </pre>
+        <div className="flex flex-col items-center p-4 lowercase">
+            <div>Work in progress</div>
+            <div>
+                displaying raw data for tweet {params.id}
+            </div>
+            <Link href="/" className="underline">
+                go to index
+            </Link>
+            <pre className="text-muted-foreground">
+                {data ? JSON.stringify(data, null, 2) : notFound()}
+            </pre>
+        </div>
     )
 }
