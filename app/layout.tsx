@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { geistSans, geistMono } from "@/lib/fonts";
 import { ThemeProvider } from "@/components/theme-provider"
+import { Analytics } from "@vercel/analytics/react"
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -31,6 +32,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Analytics/>
+      <script defer src="https://cloud.umami.is/script.js" data-website-id="97b17576-ce12-424b-ac74-500b36ea5bb8"></script>
       <link rel="icon" href="https://fav.farm/%F0%9F%92%BD" sizes="any" />
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <ThemeProvider
