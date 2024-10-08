@@ -1,64 +1,71 @@
-import Image from "next/image";
-import { Tweet } from "@/lib/types";
-import Search from "@/components/search";
-import { getKanyeEra } from "@/lib/utils";
-import { Card } from "@/components/ui/card";
-import {  } from "@radix-ui/react-tooltip";
-import { TooltipContent, TooltipProvider, TooltipTrigger, Tooltip } from "@/components/ui/tooltip";
+import Link from "next/link"
+import { Tweet } from "@/lib/types"
+import { getKanyeEra } from "@/lib/utils"
+import { Card } from "@/components/ui/card"
+import { TooltipContent, TooltipProvider, TooltipTrigger, Tooltip } from "@/components/ui/tooltip"
+import Navbar from "@/components/navbar"
 
 async function fetchTweets(): Promise<Tweet[]> {
   const res = await fetch(
-    "https://raw.githubusercontent.com/kanyewesst/ye-tweets/refs/heads/v1.0.0/output.json",
-  );
-  return res.json();
+    "https://raw.githubusercontent.com/kanyewesst/ye-tweets/refs/heads/v1.0.0/output.json"
+  )
+  return res.json()
 }
 
-const TweetCard = ( { tweet } : { tweet : Tweet } ) => {
-  const formattedDate = new Date(tweet.created_at).toLocaleDateString();
+const TweetCard = ({ tweet }: { tweet: Tweet }) => {
+  const formattedDate = new Date(tweet.created_at).toLocaleDateString()
 
   return (
-    <Card className="mb-8 overflow-hidden w-[600px]">
-      <div className="p-6 bg-stone-100">
-        <div className="flex justify-between items-start mb-4">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <span className="font-mono text-xs text-stone-500">{formattedDate}</span>
-              </TooltipTrigger>
-              <TooltipContent>
-                {new Date(tweet.created_at).toLocaleString()}
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <span className="font-mono text-xs text-stone-500">{getKanyeEra(new Date(tweet.created_at))}</span>
+    <Link href={`/tweets/${tweet.id_str}`} className="flex">
+      <Card className="mb-6 w-full">
+        <div className="p-6 bg-card">
+          <div className="flex justify-between items-start mb-4">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <span className="text-sm text-muted-foreground">{formattedDate}</span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {new Date(tweet.created_at).toLocaleString()}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <span className="text-sm text-muted-foreground">{getKanyeEra(new Date(tweet.created_at))}</span>
+          </div>
+          <p className="text-xl font-semibold leading-relaxed">{tweet.text}</p>
         </div>
-        <p className="text-2xl font-bold font-mono text-black">{tweet.text}</p>
-      </div>
-    </Card>
-  );
+      </Card>
+    </Link>
+  )
 }
-
 
 export default async function Home() {
-  const data = await fetchTweets();
-  const sortedData = data.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  const data = await fetchTweets()
+  const sortedData = data.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
 
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-mono text-5xl font-bold">
-          Ye Tweets
-        </h1>
-        <div>
-          <p>A more or less complete archive of every tweet ever published by Kanye West</p>
-          <p>Data from: archive.org, and THE spreadsheet</p>
-        </div>
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        <header className="mb-8 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Ye Tweets</h1>
+          <div className="max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground mb-2">
+              A comprehensive archive of tweets by Kanye West
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Data sources: archive.org and THE spreadsheet
+            </p>
+          </div>
+        </header>
+
+        <Navbar />
+
+        <main className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {sortedData.map((item: Tweet, index: number) => (
+            <TweetCard key={index} tweet={item} />
+          ))}
+        </main>
       </div>
-      <main className="flex flex-col gap-4 row-start-2 items-center sm:items-start">
-        {sortedData.map((item: Tweet, index: number) => (
-          <TweetCard key={index} tweet={item} />
-        ))}
-      </main>
     </div>
-  );
+  )
 }

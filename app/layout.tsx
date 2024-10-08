@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Ye Tweets",
   metadataBase: new URL("https://ye-tweets.vercel.app"),
   description: "A more or less complete archive of every tweet ever published by Kanye West",
-  keywords: ["kanye", "west", "tweets", "archive", "ye"],
+  keywords: ["kanye", "west", "tweets", "archive", "ye", "yeezy", "kanye west"],
   openGraph: {
     title: "Ye Tweets",
     description: "A more or less complete archive of every tweet ever published by Kanye West",
@@ -39,7 +39,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div>{children}</div>
+          <div className="flex flex-col items-center font-mono">
+            {children}
+          </div>
         </ThemeProvider>
       </body>
     </html>
