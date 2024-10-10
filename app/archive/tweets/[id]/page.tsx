@@ -39,7 +39,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   const formattedDate = new Date(tweet.created_at).toLocaleString()
   const kanyeEra = findEra(new Date(tweet.created_at))
   const eraContent = Array.isArray(kanyeEra) ? kanyeEra.join(', ') : kanyeEra
-  const shareUrl = `https://yetweets.com/archive/tweet/${params.id}`
+  const shareUrl = `https://yetweets.xyz/archive/tweet/${params.id}`
 
   return (
     <div className="flex flex-col items-center justify-between p-4">
