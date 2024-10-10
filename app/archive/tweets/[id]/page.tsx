@@ -11,7 +11,7 @@ import Link from "next/link"
 
 async function getData(id: string): Promise<Tweet | null> {
   try {
-    const res = await fetch(`https://raw.githubusercontent.com/kanyewesst/ye-tweets/main/data/${id}.json`)
+    const res = await fetch(`https://raw.githubusercontent.com/kanyewesst/ye-tweets/main/data/${id}.json`, { next: { revalidate: 86400 }}) 
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
     return await res.json()
   } catch (error) {
