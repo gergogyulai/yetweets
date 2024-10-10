@@ -7,8 +7,7 @@ This project aims to create a comprehensive collection of all tweets from Kanye 
 - **📊 Publicly Available Raw Tweet Data:** Access the complete set of tweet data, along with the scraping tools developed for this project. 
 - **🔎 Search Functionality:** Easily find specific tweets using advanced(ish) search. 
 - **⏳ 🎶 Era Filtering:** Browse tweets by distinct eras in Kanye's career. 
-- **📅 🔄 Sorting Options:** Organize tweets based on various criteria. 
-- **📣 🔗Share Options:** Spread the word about your favorite tweets! 
+- **📅 🔄 Sorting Options:** Organize tweets based on various criteria.
 
 ## Contributing 🤝
 
