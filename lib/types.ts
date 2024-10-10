@@ -17,3 +17,9 @@ export interface Tweet {
   };
   user_mentions: string[];
 }
+
+export interface MinimalTweet {
+  created_at: string;
+  id_str: string;
+  text: string;
+}
