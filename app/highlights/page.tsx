@@ -4,14 +4,8 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Highlights | Ye Tweets",
-  metadataBase: new URL("https://yetweets.xyz"),
-  description: "A More or Less Complete Archive of Every Tweet Ever Published by Kanye West",
-  keywords: ["kanye", "west", "tweets", "archive", "ye", "yeezy", "kanye west"],
   openGraph: {
     title: "Highlights | Ye Tweets",
-    description: "A More or Less Complete Archive of Every Tweet Ever Published by Kanye West",
-    type: "website",
-    url: "https://yetweets.xyz",
     images: [
       {
         url: "/og-highligths.png",

@@ -7,7 +7,6 @@ import { GithubIcon } from "lucide-react"
 import findEra from "@/lib/era"
 import FeaturedTweets from "@/components/featured-tweet"
 
-
 const featuredTweets: MinimalTweet[] = [
   { 
     created_at: "Fri Jul 27 21:12:18 +0000 2018",
@@ -26,9 +25,6 @@ const featuredTweets: MinimalTweet[] = [
   }
 
 ]
-
-
-
 
 export default function Home() {
   return (
@@ -51,7 +47,6 @@ export default function Home() {
           </div>
         </section>
 
-
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-4">
             <Link href="/highlights" passHref>
@@ -73,7 +68,7 @@ export default function Home() {
             <p className="text-xl mb-8 max-w-2xl mx-auto">
               Although this project is currently maintained by a solo developer, your contributions are welcome! Help us grow the Ye Tweets Archive.
             </p>
-            <Link href="/github" target="_blank" rel="noopener noreferrer">
+            <Link href="https://github.com/gergogyulai/yetweets" target="_blank" rel="noopener noreferrer">
               <Button size="lg" variant="outline" className="text-lg">
                 <GithubIcon className="mr-2 h-5 w-5" />
                 Contribute on GitHub

@@ -13,14 +13,14 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Ye Tweets",
-  metadataBase: new URL("https://yetweets.xyz"),
-  description: "A More or Less Complete Archive of Every Tweet Ever Published by Kanye West",
-  keywords: ["kanye", "west", "tweets", "archive", "ye", "yeezy", "kanye west"],
+  metadataBase: new URL("https://yetweets.xyz/"),
+  description: "A comprehensive archive of Kanye West's tweets, spanning his entire Twitter history up until 2023.",
+  keywords: ["kanye", "west", "tweets", "archive", "ye", "yeezy", "kanye west", "kanye west tweets", "kanye tweets", "kanye west twitter", "kanye twitter", "kanye west twitter archive", "kanye west tweets archive", "kanye west twitter history", "kanye west tweets history", "kanye west twitter archive", "kanye west tweets archive", "kanye west twitter history", "kanye west tweets history"],
   openGraph: {
     title: "Ye Tweets",
-    description: "A More or Less Complete Archive of Every Tweet Ever Published by Kanye West",
+    description: "A comprehensive archive of Kanye West's tweets, spanning his entire Twitter history up until 2023.",
     type: "website",
-    url: "https://yetweets.xyz",
+    url: new URL("https://yetweets.xyz/"),
     images: [
       {
         url: "/og.png",
@@ -28,8 +28,8 @@ export const metadata: Metadata = {
         height: 720,
         alt: "Ye Tweets",
       }
-    ]
-  }
+    ],
+  },  
 };
 
 export default function RootLayout({
