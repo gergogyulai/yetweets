@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
-import { geistSans, geistMono } from "@/lib/fonts";
 import { ThemeProvider } from "@/components/theme-provider"
 import { Analytics } from "@vercel/analytics/react"
 import Link from "next/link";
 import "./globals.css";
 import Navbar from "@/components/navbar";
+import localFont from "next/font/local";
+
+const geistMono = localFont({
+  src: "/fonts/GeistMonoVF.woff",
+  variable: "--font-geist-mono", 
+});
 
 export const metadata: Metadata = {
   title: "Ye Tweets",
@@ -35,9 +40,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Analytics/>
-      {/* <script defer src="https://cloud.umami.is/script.js" data-website-id="97b17576-ce12-424b-ac74-500b36ea5bb8"></script> */}
+      <head>
+        <script defer src="https://cloud.umami.is/script.js" data-website-id="97b17576-ce12-424b-ac74-500b36ea5bb8"></script>
+      </head>
       <link rel="icon" href="https://fav.farm/%F0%9F%92%BD" sizes="any" />
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`${geistMono.variable}`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

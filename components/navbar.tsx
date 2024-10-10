@@ -10,7 +10,6 @@ const Navbar = () => {
           <ul className="flex space-x-4">
             <li><Link href="/archive" className="hover:underline">Archive</Link></li>
             <li><Link href="/highlights" className="hover:underline">Highlights</Link></li>
-            <li><Link href="/github" className="hover:underline">Github</Link></li>
           </ul>
         </nav>
       </div>

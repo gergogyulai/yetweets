@@ -25,7 +25,7 @@ function TweetCard({ tweet }: TweetCardProps) {
 
   return (
     <Link href={`/archive/tweets/${tweet.id_str}`} className="block w-full">
-      <Card className="mb-6 flex flex-col h-full justify-between">
+      <Card className="mb-6 flex flex-col h-full justify-between dark:hover:border-white hover:border-black transition-all ease-in-out">
         <CardHeader className="pb-0">
           <div className="flex items-center gap-4">
             <Image

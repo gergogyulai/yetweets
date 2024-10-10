@@ -73,7 +73,7 @@ export default function Home() {
             <p className="text-xl mb-8 max-w-2xl mx-auto">
               Although this project is currently maintained by a solo developer, your contributions are welcome! Help us grow the Ye Tweets Archive.
             </p>
-            <Link href="https://github.com/your-repo-url" target="_blank" rel="noopener noreferrer">
+            <Link href="/github" target="_blank" rel="noopener noreferrer">
               <Button size="lg" variant="outline" className="text-lg">
                 <GithubIcon className="mr-2 h-5 w-5" />
                 Contribute on GitHub
