@@ -42,7 +42,7 @@ function TweetCard({ tweet }: TweetCardProps) {
           </div>
         </CardHeader>
         <CardContent className="p-6">
-          <p className="text-xl font-semibold leading-relaxed">{tweet.text}</p>
+          <div className="text-xl font-semibold leading-relaxed">{tweet.text}</div>
         </CardContent>
         <CardFooter className="flex justify-between items-center">
           <TooltipProvider>

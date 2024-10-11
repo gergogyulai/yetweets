@@ -5,6 +5,7 @@ import { TooltipContent, TooltipProvider, TooltipTrigger, Tooltip } from "@/comp
 import Link from 'next/link'
 import { MinimalTweet } from "@/lib/types"
 import findEra from '@/lib/era'
+import TweetRenderer from './tweet-renderer'
 
 const FeaturedTweets = ({tweet} : {tweet: MinimalTweet}) => {
   const formattedDate = new Date(tweet.created_at).toLocaleDateString()
@@ -15,7 +16,9 @@ const FeaturedTweets = ({tweet} : {tweet: MinimalTweet}) => {
   return (
     <Link href={`/archive/tweets/${tweet.id_str}`} key={tweet.id_str} className="flex" prefetch={false}>
       <Card className=" flex flex-col justify-between p-6 hover:shadow-lg transition-shadow w-full">
-        <p className="text-lg mb-4">{tweet.text}</p>
+        <div className="text-lg mb-4">
+          <TweetRenderer tweet={tweet.text} />
+        </div>
         <div className='flex justify-between text-sm text-muted-foreground'>
           <TooltipProvider>
             <Tooltip>

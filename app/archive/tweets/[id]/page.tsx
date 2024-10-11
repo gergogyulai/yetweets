@@ -8,6 +8,9 @@ import findEra from "@/lib/era"
 import { Tweet } from "@/lib/types"
 import Share from "@/components/share"
 import Link from "next/link"
+import { detectRetweet, gracefullyTruncate, hasTcoLink, removeRetweetString, removeTcoLink } from "@/lib/utils"
+import MissingMedia from "@/components/missing-media-badge"
+import TweetRenderer from "@/components/tweet-renderer"
 
 async function getData(id: string): Promise<Tweet | null> {
   try {
@@ -22,7 +25,7 @@ async function getData(id: string): Promise<Tweet | null> {
 
 export async function generateMetadata({ params: { id } }: { params: { id: string }}): Promise<Metadata> {
   return {
-    title: `Tweet ${id} | Ye Tweets`,
+    title: `Tweet: ${id} | Ye Tweets`,
     description: `View a Tweet by Kanye West`,
     openGraph: {
       title: `Tweet ${id} | Ye Tweets`,
@@ -40,25 +43,33 @@ export default async function Page({ params }: { params: { id: string } }) {
   const kanyeEra = findEra(new Date(tweet.created_at))
   const eraContent = Array.isArray(kanyeEra) ? kanyeEra.join(', ') : kanyeEra
   const shareUrl = `https://yetweets.xyz/archive/tweets/${params.id}`
+  const isRetweet = detectRetweet(tweet.text)
 
   return (
     <div className="flex flex-col items-center justify-between p-4">
         <Card className="w-full max-w-xl bg-card text-card-foreground shadow">
             <CardContent className="flex flex-col p-6">
-                <div className="flex items-center gap-4 mb-4">
-                  <Image
-                    src="/pfp.jpg"
-                    alt="Kanye West"
-                    width={48}
-                    height={48}
-                    className="rounded-full"
-                  />
-                    <div className="flex flex-col">
-                      <span className="font-semibold leading-none tracking-tight">Kanye West</span>
-                      <span className="text-sm text-muted-foreground">@kanyewest</span>
-                    </div>
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center gap-4">
+                    <Image
+                      src="/pfp.jpg"
+                      alt="Kanye West"
+                      width={48}
+                      height={48}
+                      className="rounded-full"
+                    />
+                      <div className="flex flex-col mt-[2px]">
+                        <span className="font-semibold leading-none tracking-tight">Kanye West</span>
+                        <span className="text-sm text-muted-foreground">@kanyewest</span>
+                      </div>
+                  </div>
+                  <div>
+                    <MissingMedia hasMissingMedia={hasTcoLink(tweet.text)} />
+                  </div>
                 </div>
-                <p className="text-xl font-semibold leading-relaxed mb-4">{tweet.text}</p>
+                <div className="text-xl font-semibold leading-relaxed mb-4">
+                  <TweetRenderer tweet={tweet.text} />
+                </div>
                 <div className="flex justify-between items-center text-sm text-muted-foreground">
                     <span>{formattedDate}</span>
                     <span>{eraContent}</span>
