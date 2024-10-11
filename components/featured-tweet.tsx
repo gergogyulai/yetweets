@@ -13,7 +13,7 @@ const FeaturedTweets = ({tweet} : {tweet: MinimalTweet}) => {
   const eraContent = Array.isArray(kanyeEra) ? kanyeEra.join(', ') : kanyeEra
 
   return (
-    <Link href={`/archive/tweets/${tweet.id_str}`} key={tweet.id_str} className="flex">
+    <Link href={`/archive/tweets/${tweet.id_str}`} key={tweet.id_str} className="flex" prefetch={false}>
       <Card className=" flex flex-col justify-between p-6 hover:shadow-lg transition-shadow w-full">
         <p className="text-lg mb-4">{tweet.text}</p>
         <div className='flex justify-between text-sm text-muted-foreground'>

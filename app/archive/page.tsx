@@ -24,7 +24,7 @@ function TweetCard({ tweet }: TweetCardProps) {
   const eraContent = Array.isArray(kanyeEra) ? kanyeEra.join(', ') : kanyeEra
 
   return (
-    <Link href={`/archive/tweets/${tweet.id_str}`} className="block w-full">
+    <Link href={`/archive/tweets/${tweet.id_str}`} prefetch={false} className="block w-full">
       <Card className="mb-6 flex flex-col h-full justify-between dark:hover:border-white hover:border-black transition-all ease-in-out">
         <CardHeader className="pb-0">
           <div className="flex items-center gap-4">
