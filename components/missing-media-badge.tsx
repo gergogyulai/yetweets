@@ -16,7 +16,7 @@ export default function MissingMedia({ hasMissingMedia }: { hasMissingMedia: boo
           </TooltipTrigger>
           <TooltipContent className=' max-w-80'>
             <p className="text-sm">
-              {"This tweet contains image(s) or video(s) that are not available, mediafiles are not yet archived actively."}
+                {"This tweet includes images or videos that are currently unavailable. Media files have not been actively archived yet."}
             </p>
           </TooltipContent>
         </Tooltip>
