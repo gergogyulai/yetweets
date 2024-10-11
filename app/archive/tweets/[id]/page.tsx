@@ -11,6 +11,7 @@ import Link from "next/link"
 import { detectRetweet, gracefullyTruncate, hasTcoLink, removeRetweetString, removeTcoLink } from "@/lib/utils"
 import MissingMedia from "@/components/missing-media-badge"
 import TweetRenderer from "@/components/tweet-renderer"
+import { Badge } from "@/components/ui/badge"
 
 async function getData(id: string): Promise<Tweet | null> {
   try {
@@ -54,8 +55,8 @@ export default async function Page({ params }: { params: { id: string } }) {
                     <Image
                       src="/pfp.jpg"
                       alt="Kanye West"
-                      width={48}
-                      height={48}
+                      width={45}
+                      height={45}
                       className="rounded-full"
                     />
                       <div className="flex flex-col mt-[2px]">
@@ -63,8 +64,13 @@ export default async function Page({ params }: { params: { id: string } }) {
                         <span className="text-sm text-muted-foreground">@kanyewest</span>
                       </div>
                   </div>
-                  <div>
+                  <div className="-mt-[8px] flex gap-2 select-none">
                     <MissingMedia hasMissingMedia={hasTcoLink(tweet.text)} />
+                    {isRetweet &&
+                      <Badge>
+                        Retweet
+                      </Badge>
+                    }
                   </div>
                 </div>
                 <div className="text-xl font-semibold leading-relaxed mb-4">

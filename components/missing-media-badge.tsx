@@ -1,6 +1,5 @@
 import { Info } from 'lucide-react'
-import React from 'react'
-import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from './ui/tooltip'
+import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 export default function MissingMedia({ hasMissingMedia }: { hasMissingMedia: boolean }) {
   if(!hasMissingMedia) return null

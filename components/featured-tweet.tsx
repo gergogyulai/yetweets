@@ -1,11 +1,11 @@
 import React from 'react'
-import { Tweet } from "@/lib/types"
-import { Card } from "@/components/ui/card"
-import { TooltipContent, TooltipProvider, TooltipTrigger, Tooltip } from "@/components/ui/tooltip"
 import Link from 'next/link'
 import { MinimalTweet } from "@/lib/types"
+import { Tweet } from "@/lib/types"
 import findEra from '@/lib/era'
-import TweetRenderer from './tweet-renderer'
+import { TooltipContent, TooltipProvider, TooltipTrigger, Tooltip } from "@/components/ui/tooltip"
+import { Card } from "@/components/ui/card"
+import TweetRenderer from '@/components/tweet-renderer'
 
 const FeaturedTweets = ({tweet} : {tweet: MinimalTweet}) => {
   const formattedDate = new Date(tweet.created_at).toLocaleDateString()
