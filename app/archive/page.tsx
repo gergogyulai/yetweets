@@ -5,6 +5,8 @@ import { Tweet } from "@/lib/types"
 import { Card, CardFooter, CardHeader, CardContent } from "@/components/ui/card"
 import { TooltipContent, TooltipProvider, TooltipTrigger, Tooltip } from "@/components/ui/tooltip"
 import findEra from '@/lib/era'
+import MediaRenderer from "@/components/image-renderer"
+import TweetRenderer from '@/components/tweet-renderer'
 
 async function fetchTweets(): Promise<Tweet[]> {
   const res = await fetch(
@@ -43,6 +45,11 @@ function TweetCard({ tweet }: TweetCardProps) {
         </CardHeader>
         <CardContent className="p-6">
           <div className="text-xl font-semibold leading-relaxed">{tweet.text}</div>
+          {/* {tweet.extended_entities && tweet.extended_entities.media.length > 0 && (
+            <div className="mb-4">
+              <MediaRenderer media={tweet.extended_entities.media} />
+            </div>
+          )} */}
         </CardContent>
         <CardFooter className="flex justify-between items-center">
           <TooltipProvider>

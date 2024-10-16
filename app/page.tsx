@@ -1,11 +1,12 @@
 import Link from "next/link"
 import { MinimalTweet } from "@/lib/types"
-import { Card } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { TooltipContent, TooltipProvider, TooltipTrigger, Tooltip } from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
 import { GithubIcon } from "lucide-react"
 import findEra from "@/lib/era"
 import FeaturedTweets from "@/components/featured-tweet"
+import { cn } from "@/lib/utils"
 
 const featuredTweets: MinimalTweet[] = [
   { 
@@ -84,11 +85,74 @@ export default function Home() {
               {"The Ye Tweets Archive is an effort to preserve Kanye West's Twitter history. "}
               Our data comes from reliable sources including <Link className="underline" href={"https://archive.org/"}>archive.org</Link>, <Link className="underline" href={"https://polititweet.org"}>polititweet.org</Link>, and community-maintained spreadsheets.
             </p>
-            {/* <Link href="/about" passHref>
-              <Button variant="link" size="lg" className="text-lg">Learn More</Button>
-            </Link> */}
           </div>
         </section>
+
+        <section className="py-16 md:py-24 bg-muted">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl font-semibold mb-6 text-center">Known Issues and Limitations</h2>
+        <p className="text-xl max-w-3xl mx-auto text-center mb-12">
+          The Ye Tweets Archive is an ongoing project, and we strive for accuracy and completeness. However, there are some known issues and limitations that users should be aware of:
+        </p>
+        <div className="grid md:grid-cols-2 gap-8">
+          <Card>
+            <CardHeader>
+              <CardTitle>Known Issues</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>Some tweets may be missing due to incomplete data sources.</li>
+                <li>Some mass archived tweets may be malformed or contain errors. We are working to correct these issues manually.</li>
+                <li>Retweets and replies may not always be accurately labeled.</li>
+                <li>Not all media attachments are archived.</li>
+                <li>Some of the tweet metadata (e.g., likes, retweets) is missing.</li>
+              </ul>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Limitations</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>Context for some tweets may be lost due to the nature of archiving.</li>
+                <li>The archive may not capture all deleted tweets.</li>
+                <li>Some tweets may be truncated or contain broken links.</li>
+                <li>
+                  Videos and other non-image media is not supported in the archive. Due to the nature of the data sources, we are unable to provide video content.
+                </li>
+                <li>The JSON schema may not always be consistent across all tweets. This may result in missing or incorrect data.</li>
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
+        <Card className="mt-8">
+            <CardHeader>
+              <CardTitle>Upcoming updates</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>Improved media support for tweets with images.</li>
+                <li>Enhanced metadata for tweets, including likes and retweets.</li>
+                <li>Improved error handling and data validation.</li>
+                <li>Search functionality to help users find specific tweets or topics, eras.</li>
+                <li>Better support for external links, including previews and metadata</li>
+                <li>Replace the current JSON data source with a more reliable and up-to-date solution.</li>
+              </ul>
+            </CardContent>
+          </Card>
+        <div className="mt-12 text-center">
+          <p className="text-lg mb-4">
+            We're continuously working to improve the archive and address these issues. Your feedback and contributions are valuable in this process.
+          </p>
+          <Link href="https://github.com/gergogyulai/yetweets" target="_blank">
+            <Button variant="outline" size="lg">
+              Report an Issue or Suggest Improvements
+            </Button>
+          </Link>
+        </div>
+      </div>
+    </section>
 
       </main>
 

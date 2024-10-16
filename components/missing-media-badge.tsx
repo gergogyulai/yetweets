@@ -6,7 +6,7 @@ export default function MissingMedia({ hasMissingMedia }: { hasMissingMedia: boo
   return (
     <div className='flex items-center gap-1'>
       <div>
-        <p className="text-muted-foreground text-sm">missing media</p>
+        <p className="text-muted-foreground text-sm">media might be missing</p>
       </div>
       <TooltipProvider>
         <Tooltip>
@@ -15,7 +15,7 @@ export default function MissingMedia({ hasMissingMedia }: { hasMissingMedia: boo
           </TooltipTrigger>
           <TooltipContent className=' max-w-80'>
             <p className="text-sm">
-                {"This tweet includes images or videos that are currently unavailable. Media files have not been actively archived yet."}
+                {"This tweet includes images or videos that currently may or may not be available. Media is not being actively archived yet."}
             </p>
           </TooltipContent>
         </Tooltip>
