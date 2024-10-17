@@ -17,7 +17,7 @@ import {VAULT_URL} from "@/lib/utils"
 
 async function getData(id: string): Promise<Tweet | null> {
   try {
-    const res = await fetch(`${VAULT_URL}/data/${id}.json`, { next: { revalidate: 86400 }}) 
+    const res = await fetch(`${VAULT_URL}/tweets/${id}.json`, { next: { revalidate: 86400 }}) 
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
     return await res.json()
   } catch (error) {
