@@ -2,6 +2,8 @@ import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { type Tweet } from "@/lib/types"
 
+export const VAULT_URL = 'https://raw.githubusercontent.com/yetweets/vault/main';
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

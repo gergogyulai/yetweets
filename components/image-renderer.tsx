@@ -2,6 +2,7 @@ import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { type Media } from '@/lib/types'
+import { VAULT_URL } from '@/lib/utils'
 
 function extractMediaIdentifier(mediaUrlHttps: string): string | null {
   const matches = mediaUrlHttps.match(/\/media\/([^.]+)/)
@@ -30,7 +31,7 @@ export default function MediaRenderer({ media }: { media: Media[] }) {
     <div className={`grid ${getGridClass(media.length)} gap-1 overflow-hidden max-w-2xl`}>
       {media.map((item, index) => {
         const identifier = extractMediaIdentifier(item.media_url_https)
-        const imageUrl = identifier ? `https://raw.githubusercontent.com/kanyewesst/ye-tweets/main/assets/${identifier}.jpg` : ''
+        const imageUrl = identifier ? `${VAULT_URL}/media/${identifier}.jpg` : ''
 
         return (
           <Link
