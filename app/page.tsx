@@ -88,7 +88,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="py-16 md:py-24 bg-muted">
+        {/* <section className="py-16 md:py-24 bg-muted">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-semibold mb-6 text-center">Known Issues and Limitations</h2>
         <p className="text-xl max-w-3xl mx-auto text-center mb-12">
@@ -152,7 +152,7 @@ export default function Home() {
           </Link>
         </div>
       </div>
-    </section>
+    </section> */}
 
       </main>
 
