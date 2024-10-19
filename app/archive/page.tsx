@@ -7,10 +7,11 @@ import { TooltipContent, TooltipProvider, TooltipTrigger, Tooltip } from "@/comp
 import findEra from '@/lib/era'
 import MediaRenderer from "@/components/image-renderer"
 import TweetRenderer from '@/components/tweet-renderer'
+import { VAULT_URL } from '@/lib/utils'
 
 async function fetchTweets(): Promise<Tweet[]> {
   const res = await fetch(
-    "https://raw.githubusercontent.com/kanyewesst/ye-tweets/refs/heads/v1.0.0/output.json"
+    `${VAULT_URL}/output.json`
   )
   return res.json()
 }
