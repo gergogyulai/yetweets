@@ -53,13 +53,14 @@ export default function TweetRenderer({
   entities?: Entities;
 }) {
   const isRetweet = detectRetweet(tweet);
-
+  
   let processedText = tweet;
   if (isRetweet) {
     processedText = removeRetweetString(processedText);
   }
-
   processedText = removeTcoLink(processedText);
+
+  if (processedText.length === 0) return null;
 
   return (
     <div>
