@@ -7,7 +7,7 @@ import findEra from "@/lib/era"
 import { Tweet } from "@/lib/types"
 import Share from "@/components/share"
 import Link from "next/link"
-import { detectRetweet, extractMediaInfentifierFromUrl, getMediaUrl, gracefullyTruncate, hasTcoLink, removeRetweetString, removeTcoLink } from "@/lib/utils"
+import { detectRetweet, extractMediaInfentifierFromUrl, getMediaUrl, gracefullyTruncate, removeTcoLink } from "@/lib/utils"
 import MissingMedia from "@/components/missing-media-badge"
 import TweetRenderer from "@/components/tweet-renderer"
 import { Badge } from "@/components/ui/badge"
@@ -133,8 +133,8 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </div>
                 <div className="text-xl font-semibold leading-relaxed mb-4">
                   <TweetRenderer tweet={tweet.text} entities={tweet.entities} />
-                  {tweet.entities && tweet.entities.media && tweet.entities.media.length > 0 && (
-                    <MediaRenderer media={tweet.entities.media} />
+                  {tweet.extended_entities && tweet.extended_entities.media && tweet.extended_entities.media.length > 0 && (
+                    <MediaRenderer media={tweet.extended_entities.media} />
                   )}
                   {tweet.entities && tweet.entities.urls.length > 0 && !tweet.entities.media && !tweet.entities.urls[0].expanded_url.includes("https://twitter.com/i/web") && (
                     <LinkPreview url={tweet.entities?.urls[0].expanded_url}/>
