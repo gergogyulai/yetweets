@@ -17,12 +17,7 @@ async function fetchTweets(): Promise<Tweet[]> {
   return res.json()
 }
 
-interface TweetCardProps {
-  tweet: Tweet
-}
-
-
-const InfoBar = ({ tweet }: TweetCardProps) => {
+const InfoBar = ({ tweet }: {tweet: Tweet}) => {
   const mediaCount = tweet.extended_entities?.media?.length || 0;
   const mediaTypes = tweet.extended_entities?.media
     ? tweet.extended_entities.media.reduce((acc, media) => {
@@ -62,7 +57,7 @@ const InfoBar = ({ tweet }: TweetCardProps) => {
   );
 };
 
-function TweetCard({ tweet }: TweetCardProps) {
+function TweetCard({ tweet }: { tweet: Tweet }) {
   const formattedDate = new Date(tweet.created_at).toLocaleDateString()
   const fullDateTime = new Date(tweet.created_at).toLocaleString()
   const kanyeEra = findEra(new Date(tweet.created_at))
