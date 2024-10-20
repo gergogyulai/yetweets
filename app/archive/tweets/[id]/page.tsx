@@ -7,7 +7,7 @@ import findEra from "@/lib/era"
 import { Tweet } from "@/lib/types"
 import Share from "@/components/share"
 import Link from "next/link"
-import { detectRetweet, gracefullyTruncate, hasTcoLink, removeRetweetString, removeTcoLink } from "@/lib/utils"
+import { detectRetweet, extractMediaInfentifierFromUrl, getMediaUrl, gracefullyTruncate, hasTcoLink, removeRetweetString, removeTcoLink } from "@/lib/utils"
 import MissingMedia from "@/components/missing-media-badge"
 import TweetRenderer from "@/components/tweet-renderer"
 import { Badge } from "@/components/ui/badge"
@@ -27,19 +27,80 @@ async function getData(id: string): Promise<Tweet | null> {
 }
 
 export async function generateMetadata({ params: { id } }: { params: { id: string }}): Promise<Metadata> {
-  return {
-    title: `Tweet: ${id} | Ye Tweets`,
-    description: `View a Tweet by Kanye West`,
-    openGraph: {
-      title: `Tweet ${id} | Ye Tweets`,
-      description: `View a Tweet by Kanye West on the Ye Tweets Archive`,
-      images: [
-        { url: `/og.png`, width: 1280, height: 720, alt: `Tweet ${id} | Ye Tweets` }
-      ],
-      siteName: `Ye Tweets`,
-      url: `https://yetweets.xyz/archive/tweets/${id}`
-    }
+  const tweet = await getData(id);
+
+  if (!tweet) {
+    return {
+      title: 'Tweet not found | Ye Tweets Archive',
+      description: 'This tweet could not be found. It either does not exist or has not been archived yet.',
+      openGraph: {
+        title: 'Tweet not found | Ye Tweets Archive',
+        description: 'This tweet could not be found. It either does not exist or has not been archived yet.',
+        siteName: 'Ye Tweets Archive',
+        url: `https://yetweets.xyz/archive/tweets/${id}`,
+        images: [
+          {
+            url: `/og.png`,
+            width: 1280,
+            height: 720,
+            alt: `Tweet ${id} | Ye Tweets Archive`
+          }
+        ]
+      },
+      twitter: {
+        card: 'summary',
+        title: 'Tweet not found | Ye Tweets Archive',
+        description: 'This tweet could not be found. It either does not exist or has not been archived yet.',
+        images: ['/og.png']
+      }
+    };
   }
+
+  const tweetText = removeTcoLink(tweet.text) || 'View this archived Tweet';
+  const tweetAuthor = 'ye';
+  const tweetCreationDate = tweet?.created_at ? new Date(tweet.created_at).toLocaleString('en-US', { timeZone: 'UTC' }) : 'Unknown date';
+
+  // Extract media and handle fallback cases
+  const media = tweet?.extended_entities?.media?.[0];
+  const isVideo = media?.type === 'video';
+  const tweetMedia = isVideo || !media ? null : getMediaUrl(extractMediaInfentifierFromUrl(media?.media_url_https));
+  const tweetMediaAltText = media?.type === 'photo'
+    ? `Archived image from tweet by ${tweetAuthor}`
+    : 'Archived media from tweet';
+
+  return {
+    title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(tweetText)}" | Ye Tweets Archive`,
+    description: `Archived Tweet from ${tweetAuthor} posted on ${tweetCreationDate}: "${tweetText}"`,
+    openGraph: {
+      title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(tweetText)}"`,
+      description: `View this archived Tweet from ${tweetAuthor}, originally posted on ${tweetCreationDate}. ${tweetText}`,
+      images: tweetMedia
+        ? [
+            {
+              url: tweetMedia,
+              width: media?.sizes?.large?.w || 1280,
+              height: media?.sizes?.large?.h || 720,
+              alt: tweetMediaAltText
+            }
+          ]
+        : [
+            {
+              url: `/og.png`,
+              width: 1280,
+              height: 720,
+              alt: `Archived Tweet ${id} | Ye Tweets Archive`
+            }
+          ],
+      siteName: 'Ye Tweets Archive',
+      url: `https://yetweets.xyz/archive/tweets/${id}`
+    },
+    twitter: {
+      card: tweetMedia ? 'summary_large_image' : 'summary',
+      title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(tweetText)}"`,
+      description: `Archived Tweet originally posted on ${tweetCreationDate}: "${tweetText}"`,
+      images: tweetMedia ? [tweetMedia] : ['/og.png']
+    }
+  };
 }
 
 export default async function Page({ params }: { params: { id: string } }) {
@@ -65,7 +126,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                       className="rounded-full"
                     />
                       <div className="flex flex-col mt-[2px]">
-                        <span className="font-semibold leading-none tracking-tight">Kanye West</span>
+                        <span className="font-semibold leading-none tracking-tight">ye</span>
                         <span className="text-sm text-muted-foreground">@kanyewest</span>
                       </div>
                   </div>
@@ -102,7 +163,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     <span>Return to Archive</span>
                 </Button>
             </Link>
-            <Link href={`https://raw.githubusercontent.com/kanyewesst/ye-tweets/main/data/${params.id}.json`} target="_blank">
+            <Link href={`${VAULT_URL}/tweets/${params.id}.json`} target="_blank">
                 <Button asChild size="lg" variant={"outline"}>
                     <span>
                         View Raw JSON

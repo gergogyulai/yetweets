@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function gracefullyTruncate(str: string): string {
-  const maxLength = 40;
+  const maxLength = 30;
   const maxWordLength = 16;
 
   if (str.length <= maxLength) return str;
@@ -44,18 +44,6 @@ export function removeTcoLink(text: string): string {
   return text.replace(tcoLinkRegex, '').trim();
 }
 
-export function extractMediaIdentifier(data: Tweet): string | null {
-  if (data.extended_entities && data.extended_entities.media.length > 0) {
-    const mediaUrlHttps = data.extended_entities.media[0].media_url_https;
-    const matches = mediaUrlHttps.match(/\/media\/([^.]+)/);
-    
-    if (matches && matches[1]) {
-      return matches[1];
-    }
-  }
-  return null;
-}
-
 export function truncateUrl(url: string, maxLength: number): string {
   if (url.length <= maxLength) {
     return url;
@@ -82,4 +70,25 @@ export function truncateToDomain(url: string): string {
     console.error('Invalid URL:', error);
     return '';
   }
+}
+
+export function extractMediaIdentifier(data: Tweet): string | null {
+  if (data.extended_entities && data.extended_entities.media.length > 0) {
+    const mediaUrlHttps = data.extended_entities.media[0].media_url_https;
+    const matches = mediaUrlHttps.match(/\/media\/([^.]+)/);
+    
+    if (matches && matches[1]) {
+      return matches[1];
+    }
+  }
+  return null;
+}
+
+export function extractMediaInfentifierFromUrl(url: string): string {
+  const matches = url.match(/\/media\/([^.]+)/);
+  return matches && matches[1] ? matches[1] : '';
+}
+
+export function getMediaUrl(mediaId: string): string {
+  return `${VAULT_URL}/media/${mediaId}.jpg`;
 }

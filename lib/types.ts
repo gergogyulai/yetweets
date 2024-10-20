@@ -87,3 +87,20 @@ export type LinkPreviewMetaData = {
   description: string;
   image: string;
 };
+
+// export type User = {
+//   contributors_enabled: boolean;
+//   created_at: string;
+//   description: string | null;
+//   favourites_count: number;
+//   id: number;
+//   id_str: string;
+//   lang: string | null;
+//   location: string | null;
+//   name: string;
+//   screen_name: string;
+//   statuses_count: number;
+//   url: string | null;
+//   utc_offset: number | null;
+//   verified: boolean;
+// };
