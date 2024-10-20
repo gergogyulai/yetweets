@@ -8,6 +8,7 @@ import findEra from '@/lib/era'
 import MediaRenderer from "@/components/image-renderer"
 import TweetRenderer from '@/components/tweet-renderer'
 import { VAULT_URL } from '@/lib/utils'
+import { Badge } from '@/components/ui/badge'
 
 async function fetchTweets(): Promise<Tweet[]> {
   const res = await fetch(
@@ -20,6 +21,47 @@ interface TweetCardProps {
   tweet: Tweet
 }
 
+
+const InfoBar = ({ tweet }: TweetCardProps) => {
+  const mediaCount = tweet.extended_entities?.media?.length || 0;
+  const mediaTypes = tweet.extended_entities?.media
+    ? tweet.extended_entities.media.reduce((acc, media) => {
+        if (media?.type) {
+          acc[media.type] = (acc[media.type] || 0) + 1;
+        }
+        return acc;
+      }, {} as Record<string, number>)
+    : {};
+
+  const formatMediaText = (type: string, count: number) => {
+    if (count === 1) return `${type}`;
+    return `${type}s`;
+  };
+
+  return (
+    <div className="flex gap-2">
+      <Badge className="bg-primary-foreground border-border text-foreground">
+        {tweet.favorite_count} Likes
+      </Badge>
+      <Badge className="bg-primary-foreground border-border text-foreground">
+        {tweet.retweet_count} Retweets
+      </Badge>
+      {mediaCount > 0 && (
+        <Badge className="bg-primary-foreground border-border text-foreground">
+          {mediaCount} Media ({Object.entries(mediaTypes)
+            .map(([type, count]) => formatMediaText(type, count))
+            .join(', ')})
+        </Badge>
+      )}
+      {tweet.deleted && (
+        <Badge className="bg-primary-foreground border-destructive text-foreground">
+          Deleted
+        </Badge>
+      )}
+    </div>
+  );
+};
+
 function TweetCard({ tweet }: TweetCardProps) {
   const formattedDate = new Date(tweet.created_at).toLocaleDateString()
   const fullDateTime = new Date(tweet.created_at).toLocaleString()
@@ -29,41 +71,60 @@ function TweetCard({ tweet }: TweetCardProps) {
   return (
     <Link href={`/archive/tweets/${tweet.id_str}`} prefetch={false} className="block w-full">
       <Card className="mb-6 flex flex-col h-full justify-between dark:hover:border-white hover:border-black transition-all ease-in-out">
-        <CardHeader className="pb-0">
-          <div className="flex items-center gap-4">
-            <Image
-              src="/pfp.jpg"
-              alt="Kanye West"
-              width={48}
-              height={48}
-              className="rounded-full"
-            />
-            <div className="flex flex-col">
-              <span className="font-semibold leading-none tracking-tight">Kanye West</span>
-              <span className="text-sm text-muted-foreground">@kanyewest</span>
+        <CardHeader className="pb-0 flex w-full">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-4">
+              <Image
+                src="/pfp.jpg"
+                alt="Kanye West"
+                width={48}
+                height={48}
+                className="rounded-full"
+              />
+              <div className="flex flex-col">
+                <span className="font-semibold leading-none tracking-tight">Kanye West</span>
+                <span className="text-sm text-muted-foreground">@kanyewest</span>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              {tweet?.retweeted_status && (
+                <Badge className="bg-primary-foreground border-border text-foreground">
+                  Retweeted
+                </Badge>
+              )}
+              {tweet.is_quote_status && (
+                <Badge className="bg-primary-foreground border-border text-foreground">
+                  Qoute Tweet
+                </Badge>
+              )}
+              {tweet.in_reply_to_status_id_str && (
+                <Badge className="bg-primary-foreground border-border text-foreground">
+                  Reply
+                </Badge>
+              )}
             </div>
           </div>
         </CardHeader>
         <CardContent className="p-6">
           <div className="text-xl font-semibold leading-relaxed">{tweet.text}</div>
-          {/* {tweet.extended_entities && tweet.extended_entities.media.length > 0 && (
-            <div className="mb-4">
-              <MediaRenderer media={tweet.extended_entities.media} />
-            </div>
-          )} */}
         </CardContent>
-        <CardFooter className="flex justify-between items-center">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span className="text-sm text-muted-foreground">{formattedDate}</span>
-              </TooltipTrigger>
-              <TooltipContent>
-                {fullDateTime}
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <span className="text-sm text-muted-foreground">{eraContent}</span>
+        <CardFooter className="flex flex-col w-full gap-2">
+          <div className='w-full'>
+            <InfoBar tweet={tweet} />
+          </div>
+          <div className='w-full flex justify-between items-center'>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="text-sm text-muted-foreground">{formattedDate}</span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {fullDateTime}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <span className="text-sm text-muted-foreground">{eraContent}</span>
+          </div>
         </CardFooter>
       </Card>
     </Link>
@@ -71,9 +132,12 @@ function TweetCard({ tweet }: TweetCardProps) {
 }
 
 export default async function ArchivePage() {
-  const data = await fetchTweets()
-  const sortedData = data.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-  return(
+  const data = await fetchTweets();
+  const sortedData = data
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    // .slice(0, 10); // Limit to the first 10 items
+
+  return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 md:py-12">  
         <main className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3 auto-rows-fr"> 
@@ -83,5 +147,5 @@ export default async function ArchivePage() {
         </main>
       </div>
     </div>
-  )
+  );
 }

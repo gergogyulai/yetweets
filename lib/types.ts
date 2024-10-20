@@ -31,6 +31,7 @@ export type Tweet = {
   truncated?: boolean;
   favorited?: boolean;
   retweeted?: boolean;
+  retweeted_status: Tweet | null;
 };
 
 export type MinimalTweet = {
