@@ -59,14 +59,15 @@ export async function generateMetadata({ params: { id } }: { params: { id: strin
   const tweetText = removeTcoLink(tweet.text) || 'View this archived Tweet';
   const tweetAuthor = 'ye';
   const tweetCreationDate = tweet?.created_at ? new Date(tweet.created_at).toLocaleString('en-US', { timeZone: 'UTC' }) : 'Unknown date';
-
-  // Extract media and handle fallback cases
   const media = tweet?.extended_entities?.media?.[0];
   const isVideo = media?.type === 'video';
-  const tweetMedia = isVideo || !media ? null : getMediaUrl(extractMediaInfentifierFromUrl(media?.media_url_https));
-  const tweetMediaAltText = media?.type === 'photo'
+  const isPhoto = media?.type === 'photo';
+  const tweetMedia = isPhoto ? getMediaUrl(extractMediaInfentifierFromUrl(media?.media_url_https)) : null;
+  const tweetMediaAltText = isPhoto
     ? `Archived image from tweet by ${tweetAuthor}`
     : 'Archived media from tweet';
+  const fallbackImage = '/og.png';
+  const imageForMetadata = tweetMedia || fallbackImage;
 
   return {
     title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(tweetText)}" | Ye Tweets Archive`,
@@ -74,23 +75,14 @@ export async function generateMetadata({ params: { id } }: { params: { id: strin
     openGraph: {
       title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(tweetText)}"`,
       description: `View this archived Tweet from ${tweetAuthor}, originally posted on ${tweetCreationDate}. ${tweetText}`,
-      images: tweetMedia
-        ? [
-            {
-              url: tweetMedia,
-              width: media?.sizes?.large?.w || 1280,
-              height: media?.sizes?.large?.h || 720,
-              alt: tweetMediaAltText
-            }
-          ]
-        : [
-            {
-              url: `/og.png`,
-              width: 1280,
-              height: 720,
-              alt: `Archived Tweet ${id} | Ye Tweets Archive`
-            }
-          ],
+      images: [
+        {
+          url: imageForMetadata,
+          width: isPhoto ? media?.sizes?.large?.w || 1280 : 1280,
+          height: isPhoto ? media?.sizes?.large?.h || 720 : 720,
+          alt: tweetMediaAltText || `Archived Tweet ${id} | Ye Tweets Archive`
+        }
+      ],
       siteName: 'Ye Tweets Archive',
       url: `https://yetweets.xyz/archive/tweets/${id}`
     },
@@ -98,7 +90,7 @@ export async function generateMetadata({ params: { id } }: { params: { id: strin
       card: tweetMedia ? 'summary_large_image' : 'summary',
       title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(tweetText)}"`,
       description: `Archived Tweet originally posted on ${tweetCreationDate}: "${tweetText}"`,
-      images: tweetMedia ? [tweetMedia] : ['/og.png']
+      images: [imageForMetadata]
     }
   };
 }
