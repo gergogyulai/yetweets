@@ -1,14 +1,15 @@
 {
   "extends": [
-    "next/core-web-vitals", 
-    "next/typescript", 
-    "next", 
-    "prettier", 
-    "plugin:tailwindcss/recommended"],
+    "next/core-web-vitals",
+    "next/typescript",
+    "next",
+    "prettier",
+    "plugin:tailwindcss/recommended"
+  ],
   "ignorePatterns": [
-    "node_modules/", 
-    ".next/", 
-    "out/", 
+    "node_modules/",
+    ".next/",
+    "out/",
     "public/",
     "components/ui/*"
   ]
