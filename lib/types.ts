@@ -19,8 +19,8 @@ export type Tweet = {
   extended_entities?: ExtendedEntities;
   coordinates?: Coordinates | null;
   entities?: Entities;
-  geo?: any | null;
-  place?: any | null;
+  geo?: string | null;
+  place?: string | null;
   possibly_sensitive?: boolean;
   in_reply_to_screen_name?: string | null;
   in_reply_to_status_id?: number | null;
@@ -81,7 +81,6 @@ export type Coordinates = {
   coordinates: [number, number];
   type: string;
 };
-
 
 export type LinkPreviewMetaData = {
   title: string;

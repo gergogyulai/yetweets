@@ -8,18 +8,14 @@ import { Tweet } from "@/lib/types";
 import Share from "@/components/share";
 import Link from "next/link";
 import {
-  detectRetweet,
   extractMediaInfentifierFromUrl,
   getMediaUrl,
   gracefullyTruncate,
   removeTcoLink,
 } from "@/lib/utils";
-import MissingMedia from "@/components/missing-media-badge";
-import TweetRenderer from "@/components/tweet-renderer";
 import { Badge } from "@/components/ui/badge";
-import MediaRenderer from "@/components/image-renderer";
-import LinkPreview from "@/components/link-preview";
 import { VAULT_URL } from "@/lib/utils";
+import TweetRendererV2 from "@/components/tweet-renderer";
 
 async function getData(id: string): Promise<Tweet | null> {
   try {
@@ -34,11 +30,13 @@ async function getData(id: string): Promise<Tweet | null> {
   }
 }
 
-export async function generateMetadata({
-  params: { id },
-}: {
-  params: { id: string };
+export async function generateMetadata(props: {
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
+  const params = await props.params;
+
+  const { id } = params;
+
   const tweet = await getData(id);
 
   if (!tweet) {
@@ -77,7 +75,7 @@ export async function generateMetadata({
     ? new Date(tweet.created_at).toLocaleString("en-US", { timeZone: "UTC" })
     : "Unknown date";
   const media = tweet?.extended_entities?.media?.[0];
-  const isVideo = media?.type === "video";
+  // const isVideo = media?.type === "video";
   const isPhoto = media?.type === "photo";
   const tweetMedia = isPhoto
     ? getMediaUrl(extractMediaInfentifierFromUrl(media?.media_url_https))
@@ -90,12 +88,12 @@ export async function generateMetadata({
 
   return {
     title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(
-      tweetText
+      tweetText,
     )}" | Ye Tweets Archive`,
     description: `Archived Tweet from ${tweetAuthor} posted on ${tweetCreationDate}: "${tweetText}"`,
     openGraph: {
       title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(
-        tweetText
+        tweetText,
       )}"`,
       description: `View this archived Tweet from ${tweetAuthor}, originally posted on ${tweetCreationDate}. ${tweetText}`,
       images: [
@@ -112,7 +110,7 @@ export async function generateMetadata({
     twitter: {
       card: tweetMedia ? "summary_large_image" : "summary",
       title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(
-        tweetText
+        tweetText,
       )}"`,
       description: `Archived Tweet originally posted on ${tweetCreationDate}: "${tweetText}"`,
       images: [imageForMetadata],
@@ -123,12 +121,15 @@ export async function generateMetadata({
 const InfoBar = ({ tweet }: { tweet: Tweet }) => {
   const mediaCount = tweet.extended_entities?.media?.length || 0;
   const mediaTypes = tweet.extended_entities?.media
-    ? tweet.extended_entities.media.reduce((acc, media) => {
-        if (media?.type) {
-          acc[media.type] = (acc[media.type] || 0) + 1;
-        }
-        return acc;
-      }, {} as Record<string, number>)
+    ? tweet.extended_entities.media.reduce(
+        (acc, media) => {
+          if (media?.type) {
+            acc[media.type] = (acc[media.type] || 0) + 1;
+          }
+          return acc;
+        },
+        {} as Record<string, number>,
+      )
     : {};
 
   const formatMediaText = (type: string, count: number) => {
@@ -137,15 +138,15 @@ const InfoBar = ({ tweet }: { tweet: Tweet }) => {
   };
 
   return (
-    <div className="flex gap-2 select-none">
-      <Badge className="bg-primary-foreground border-border text-foreground">
+    <div className="flex select-none gap-2">
+      <Badge className="border-border bg-primary-foreground text-foreground">
         {tweet.favorite_count} Likes
       </Badge>
-      <Badge className="bg-primary-foreground border-border text-foreground">
+      <Badge className="border-border bg-primary-foreground text-foreground">
         {tweet.retweet_count} Retweets
       </Badge>
       {mediaCount > 0 && (
-        <Badge className="bg-primary-foreground border-border text-foreground">
+        <Badge className="border-border bg-primary-foreground text-foreground">
           {mediaCount} Media (
           {Object.entries(mediaTypes)
             .map(([type, count]) => formatMediaText(type, count))
@@ -154,7 +155,7 @@ const InfoBar = ({ tweet }: { tweet: Tweet }) => {
         </Badge>
       )}
       {tweet.deleted && (
-        <Badge className="bg-primary-foreground border-destructive text-foreground">
+        <Badge className="border-destructive bg-primary-foreground text-foreground">
           Deleted
         </Badge>
       )}
@@ -162,52 +163,57 @@ const InfoBar = ({ tweet }: { tweet: Tweet }) => {
   );
 };
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const tweet = await getData(params.id);
   if (!tweet) notFound();
 
   const formattedDate = new Date(tweet.created_at).toLocaleString();
   const kanyeEra = findEra(new Date(tweet.created_at));
   const eraContent = Array.isArray(kanyeEra) ? kanyeEra.join(", ") : kanyeEra;
-  const isRetweet = detectRetweet(tweet.text);
+
+  console.log(tweet);
 
   return (
     <div className="flex flex-col items-center justify-between p-4">
       <Card className="w-full max-w-xl bg-card text-card-foreground shadow">
         <CardContent className="flex flex-col p-6">
-          <div className="flex justify-between items-center mb-4">
+          <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Image
-                src="/pfp.jpg"
-                alt="Kanye West"
-                width={45}
-                height={45}
-                className="rounded-full"
-              />
-              <div className="flex flex-col mt-[2px]">
-                <span className="font-semibold leading-none tracking-tight">
-                  ye
-                </span>
-                <span className="text-sm text-muted-foreground">
-                  @kanyewest
-                </span>
-              </div>
+              <Link href={"/archive"} className="rounded-full">
+                <Image
+                  src="/pfp.jpg"
+                  alt="Kanye West"
+                  width={45}
+                  height={45}
+                  className="rounded-full transition-all ease-in-out hover:brightness-75"
+                />
+              </Link>
+              <Link href={"/archive"} className="hover:underline">
+                <div className="mt-[2px] flex flex-col">
+                  <span className="font-semibold leading-none tracking-tight">
+                    ye
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    @kanyewest
+                  </span>
+                </div>
+              </Link>
             </div>
-            <div className="-mt-[8px] flex gap-2 select-none">
-              {/* <MissingMedia hasMissingMedia={!!tweet.entities?.media} /> */}
+            <div className="-mt-[8px] flex select-none gap-2">
               <div className="flex gap-2">
                 {tweet?.retweeted_status && (
-                  <Badge className="bg-primary-foreground border-border text-foreground">
+                  <Badge className="border-border bg-primary-foreground text-foreground">
                     Retweeted
                   </Badge>
                 )}
                 {tweet.is_quote_status && (
-                  <Badge className="bg-primary-foreground border-border text-foreground">
+                  <Badge className="border-border bg-primary-foreground text-foreground">
                     Qoute Tweet
                   </Badge>
                 )}
                 {tweet.in_reply_to_status_id_str && (
-                  <Badge className="bg-primary-foreground border-border text-foreground">
+                  <Badge className="border-border bg-primary-foreground text-foreground">
                     Reply
                   </Badge>
                 )}
@@ -215,28 +221,18 @@ export default async function Page({ params }: { params: { id: string } }) {
             </div>
           </div>
           <div className="text-xl font-semibold leading-relaxed">
-            <div className="mb-4">
-              <TweetRenderer tweet={tweet.text} entities={tweet.entities} />
-            </div>
-            {tweet.extended_entities &&
-              tweet.extended_entities.media &&
-              tweet.extended_entities.media.length > 0 && (
-                <MediaRenderer media={tweet.extended_entities.media} />
-              )}
-            {tweet.entities &&
-              tweet.entities.urls.length > 0 &&
-              !tweet.entities.media &&
-              !tweet.entities.urls[0].expanded_url.includes(
-                "https://twitter.com/i/web"
-              ) && <LinkPreview url={tweet.entities?.urls[0].expanded_url} />}
+            <TweetRendererV2 tweet={tweet} />
           </div>
         </CardContent>
         <CardFooter className="pt-0">
-          <div className="flex flex-col w-full gap-2">
-            <InfoBar tweet={tweet} />
-            <div className="flex justify-between items-center text-sm text-muted-foreground">
+          <div className="flex w-full flex-col gap-2">
+            <div className="mb-2">
+              <InfoBar tweet={tweet} />
+            </div>
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
               <span>{formattedDate}</span>
               <span>{eraContent}</span>
+              {/* <Era date={new Date(tweet.created_at)} /> */}
             </div>
             <Share
               shareUrl={`https://yetweets.xyz/archive/tweets/${params.id}`}
@@ -244,13 +240,12 @@ export default async function Page({ params }: { params: { id: string } }) {
           </div>
         </CardFooter>
       </Card>
-      <div className="flex gap-4 mt-4">
-        <Link href="/archive">
-          <Button asChild size="lg" variant={"secondary"}>
-            <span>Return to Archive</span>
-          </Button>
-        </Link>
-        <Link href={`${VAULT_URL}/tweets/${params.id}.json`} target="_blank">
+      <div className="mt-4 flex flex-col gap-4">
+        <Link
+          href={`${VAULT_URL}/tweets/${params.id}.json`}
+          target="_blank"
+          className="block"
+        >
           <Button asChild size="lg" variant={"outline"}>
             <span>View Raw JSON</span>
           </Button>

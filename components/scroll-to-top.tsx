@@ -1,9 +1,14 @@
-"use client"
+"use client";
 
-import { ChevronUp } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { ChevronUp } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function ScrollToTop() {
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -19,19 +24,21 @@ export default function ScrollToTop() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <div className={`fixed bottom-6 right-4 ${showScrollButton ? 'visible' : 'hidden'}`}>
+    <div
+      className={`fixed bottom-6 right-4 ${showScrollButton ? "visible" : "hidden"}`}
+    >
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger>
@@ -39,9 +46,7 @@ export default function ScrollToTop() {
               <ChevronUp size={12} />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>
-            Scroll to top
-          </TooltipContent>
+          <TooltipContent>Scroll to top</TooltipContent>
         </Tooltip>
       </TooltipProvider>
     </div>

@@ -2,7 +2,7 @@ import { JSDOM } from "jsdom";
 import { type LinkPreviewMetaData } from "@/lib/types";
 
 const extractMetaTags = async (
-  url: string
+  url: string,
 ): Promise<LinkPreviewMetaData | null> => {
   try {
     const response = await fetch(url);
@@ -23,7 +23,7 @@ const extractMetaTags = async (
 
         return tags;
       },
-      {} as Record<string, string>
+      {} as Record<string, string>,
     );
 
     return {

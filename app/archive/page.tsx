@@ -1,31 +1,40 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import React from 'react'
-import { Tweet } from "@/lib/types"
-import { Card, CardFooter, CardHeader, CardContent } from "@/components/ui/card"
-import { TooltipContent, TooltipProvider, TooltipTrigger, Tooltip } from "@/components/ui/tooltip"
-import findEra from '@/lib/era'
-import MediaRenderer from "@/components/image-renderer"
-import TweetRenderer from '@/components/tweet-renderer'
-import { VAULT_URL } from '@/lib/utils'
-import { Badge } from '@/components/ui/badge'
+import Link from "next/link";
+import Image from "next/image";
+import React from "react";
+import { Tweet } from "@/lib/types";
+import {
+  Card,
+  CardFooter,
+  CardHeader,
+  CardContent,
+} from "@/components/ui/card";
+import {
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+  Tooltip,
+} from "@/components/ui/tooltip";
+import findEra from "@/lib/era";
+import { VAULT_URL } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 async function fetchTweets(): Promise<Tweet[]> {
-  const res = await fetch(
-    `${VAULT_URL}/output.json`
-  )
-  return res.json()
+  const res = await fetch(`${VAULT_URL}/output.json`);
+  return res.json();
 }
 
-const InfoBar = ({ tweet }: {tweet: Tweet}) => {
+const InfoBar = ({ tweet }: { tweet: Tweet }) => {
   const mediaCount = tweet.extended_entities?.media?.length || 0;
   const mediaTypes = tweet.extended_entities?.media
-    ? tweet.extended_entities.media.reduce((acc, media) => {
-        if (media?.type) {
-          acc[media.type] = (acc[media.type] || 0) + 1;
-        }
-        return acc;
-      }, {} as Record<string, number>)
+    ? tweet.extended_entities.media.reduce(
+        (acc, media) => {
+          if (media?.type) {
+            acc[media.type] = (acc[media.type] || 0) + 1;
+          }
+          return acc;
+        },
+        {} as Record<string, number>,
+      )
     : {};
 
   const formatMediaText = (type: string, count: number) => {
@@ -35,21 +44,23 @@ const InfoBar = ({ tweet }: {tweet: Tweet}) => {
 
   return (
     <div className="flex gap-2">
-      <Badge className="bg-primary-foreground border-border text-foreground">
+      <Badge className="border-border bg-primary-foreground text-foreground">
         {tweet.favorite_count} Likes
       </Badge>
-      <Badge className="bg-primary-foreground border-border text-foreground">
+      <Badge className="border-border bg-primary-foreground text-foreground">
         {tweet.retweet_count} Retweets
       </Badge>
       {mediaCount > 0 && (
-        <Badge className="bg-primary-foreground border-border text-foreground">
-          {mediaCount} Media ({Object.entries(mediaTypes)
+        <Badge className="border-border bg-primary-foreground text-foreground">
+          {mediaCount} Media (
+          {Object.entries(mediaTypes)
             .map(([type, count]) => formatMediaText(type, count))
-            .join(', ')})
+            .join(", ")}
+          )
         </Badge>
       )}
       {tweet.deleted && (
-        <Badge className="bg-primary-foreground border-destructive text-foreground">
+        <Badge className="border-destructive bg-primary-foreground text-foreground">
           Deleted
         </Badge>
       )}
@@ -58,16 +69,20 @@ const InfoBar = ({ tweet }: {tweet: Tweet}) => {
 };
 
 function TweetCard({ tweet }: { tweet: Tweet }) {
-  const formattedDate = new Date(tweet.created_at).toLocaleDateString()
-  const fullDateTime = new Date(tweet.created_at).toLocaleString()
-  const kanyeEra = findEra(new Date(tweet.created_at))
-  const eraContent = Array.isArray(kanyeEra) ? kanyeEra.join(', ') : kanyeEra
+  const formattedDate = new Date(tweet.created_at).toLocaleDateString();
+  const fullDateTime = new Date(tweet.created_at).toLocaleString();
+  const kanyeEra = findEra(new Date(tweet.created_at));
+  const eraContent = Array.isArray(kanyeEra) ? kanyeEra.join(", ") : kanyeEra;
 
   return (
-    <Link href={`/archive/tweets/${tweet.id_str}`} prefetch={false} className="block w-full">
-      <Card className="mb-6 flex flex-col h-full justify-between dark:hover:border-white hover:border-black transition-all ease-in-out">
-        <CardHeader className="pb-0 flex w-full">
-          <div className="flex justify-between items-center">
+    <Link
+      href={`/archive/tweets/${tweet.id_str}`}
+      prefetch={false}
+      className="block w-full"
+    >
+      <Card className="mb-6 flex h-full flex-col justify-between transition-all ease-in-out hover:border-black dark:hover:border-white">
+        <CardHeader className="flex w-full pb-0">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Image
                 src="/pfp.jpg"
@@ -77,23 +92,27 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
                 className="rounded-full"
               />
               <div className="flex flex-col">
-                <span className="font-semibold leading-none tracking-tight">Kanye West</span>
-                <span className="text-sm text-muted-foreground">@kanyewest</span>
+                <span className="font-semibold leading-none tracking-tight">
+                  Kanye West
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  @kanyewest
+                </span>
               </div>
             </div>
             <div className="flex gap-2">
               {tweet?.retweeted_status && (
-                <Badge className="bg-primary-foreground border-border text-foreground">
+                <Badge className="border-border bg-primary-foreground text-foreground">
                   Retweeted
                 </Badge>
               )}
               {tweet.is_quote_status && (
-                <Badge className="bg-primary-foreground border-border text-foreground">
+                <Badge className="border-border bg-primary-foreground text-foreground">
                   Qoute Tweet
                 </Badge>
               )}
               {tweet.in_reply_to_status_id_str && (
-                <Badge className="bg-primary-foreground border-border text-foreground">
+                <Badge className="border-border bg-primary-foreground text-foreground">
                   Reply
                 </Badge>
               )}
@@ -101,21 +120,23 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
           </div>
         </CardHeader>
         <CardContent className="p-6">
-          <div className="text-xl font-semibold leading-relaxed">{tweet.text}</div>
+          <div className="text-xl font-semibold leading-relaxed">
+            {tweet.text}
+          </div>
         </CardContent>
-        <CardFooter className="flex flex-col w-full gap-2">
-          <div className='w-full'>
+        <CardFooter className="flex w-full flex-col gap-2">
+          <div className="w-full">
             <InfoBar tweet={tweet} />
           </div>
-          <div className='w-full flex justify-between items-center'>
+          <div className="flex w-full items-center justify-between">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span className="text-sm text-muted-foreground">{formattedDate}</span>
+                  <span className="text-sm text-muted-foreground">
+                    {formattedDate}
+                  </span>
                 </TooltipTrigger>
-                <TooltipContent>
-                  {fullDateTime}
-                </TooltipContent>
+                <TooltipContent>{fullDateTime}</TooltipContent>
               </Tooltip>
             </TooltipProvider>
             <span className="text-sm text-muted-foreground">{eraContent}</span>
@@ -123,19 +144,21 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
         </CardFooter>
       </Card>
     </Link>
-  )
+  );
 }
 
 export default async function ArchivePage() {
   const data = await fetchTweets();
-  const sortedData = data
-    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-    // .slice(0, 10); // Limit to the first 10 items
+  const sortedData = data.sort(
+    (a, b) =>
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+  );
+  // .slice(0, 10); // Limit to the first 10 items
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 md:py-12">  
-        <main className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3 auto-rows-fr"> 
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        <main className="grid auto-rows-fr gap-6 lg:grid-cols-2 xl:grid-cols-3">
           {sortedData.map((item: Tweet, index: number) => (
             <TweetCard key={index} tweet={item} />
           ))}
