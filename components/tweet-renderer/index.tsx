@@ -21,30 +21,35 @@ export default function TweetRendererV2({
     return null;
   }
 
-  const hasMedia = (tweet.extended_entities?.media?.length ?? 0) > 0;
-  const urls = tweet?.entities?.urls || [];
+  const isTruncated = tweet.truncated;
+  const tweetText = isTruncated ? tweet.extended_tweet?.full_text : tweet.text;
+  const tweetEntities = isTruncated ? tweet.extended_tweet?.entities : tweet.entities;
+  const tweetMedia = isTruncated ? tweet.extended_tweet?.extended_entities?.media : tweet.extended_entities?.media;
+
+  const hasMedia = (tweetMedia?.length ?? 0) > 0;
+  const urls = tweetEntities?.urls || [];
   const hasUrls = urls.length > 0;
 
   return (
     <div id={divId}>
       {/* Tweet Text */}
-      {tweet?.text && (
+      {tweetText && (
         <div className={hasMedia && renderMedia ? "mb-4" : "mb-0"}>
-          <TweetText tweetText={tweet.text} entities={tweet.entities} />
+          <TweetText tweetText={tweetText} entities={tweetEntities} />
         </div>
       )}
 
       {/* Tweet Media */}
       {hasMedia && renderMedia && (
-        <TweetImage media={tweet.extended_entities!.media} />
+        <TweetImage media={tweetMedia || []} />
       )}
 
       {/* Tweet Link Previews */}
       {hasUrls && renderLinkPreviews && (
         <div>
           {urls
-            .filter((url) => isValidUrl(url.expanded_url))
-            .map((url, index) => (
+            .filter((url: { expanded_url: string }) => isValidUrl(url.expanded_url))
+            .map((url: { expanded_url: string }, index: number) => (
               <TweetLinkPreview key={index} url={url.expanded_url} />
             ))}
         </div>

@@ -32,6 +32,14 @@ export type Tweet = {
   favorited?: boolean;
   retweeted?: boolean;
   retweeted_status: Tweet | null;
+  extended_tweet?: ExtendedTweet;
+};
+
+export type ExtendedTweet = {
+  full_text: string;
+  display_text_range: [number, number];
+  entities: Entities;
+  extended_entities?: ExtendedEntities;
 };
 
 export type MinimalTweet = {
