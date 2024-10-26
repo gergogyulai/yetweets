@@ -12,5 +12,9 @@
     "out/",
     "public/",
     "components/ui/*"
-  ]
+  ],
+  "rules": {
+    "tailwindcss/enforces-shorthand": "off",
+    "next/no-img-element": "off"
+  }
 }
