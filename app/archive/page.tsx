@@ -19,7 +19,7 @@ import { VAULT_URL } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 
 async function fetchTweets(): Promise<Tweet[]> {
-  const res = await fetch(`${VAULT_URL}/output.json`);
+  const res = await fetch(`${VAULT_URL}/master.json`);
   return res.json();
 }
 
