@@ -8,7 +8,7 @@ import { Tweet } from "@/lib/types";
 import Share from "@/components/share";
 import Link from "next/link";
 import {
-  extractMediaInfentifierFromUrl,
+  extractMediaIdentifierFromUrl,
   getMediaUrl,
   gracefullyTruncate,
   removeTcoLink,
@@ -16,6 +16,18 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { VAULT_URL } from "@/lib/utils";
 import TweetRendererV2 from "@/components/tweet-renderer";
+
+export const dynamic = "force-static"
+export const dynamicParams = true
+
+export async function generateStaticParams() {
+  const res = await fetch(`${VAULT_URL}/master.json`);
+  const data = await res.json();
+
+  return data.map((tweet: { id_str: string }) => ({
+    params: { id: tweet.id_str },
+  }));
+}
 
 async function getData(id: string): Promise<Tweet | null> {
   try {
@@ -78,7 +90,7 @@ export async function generateMetadata(props: {
   // const isVideo = media?.type === "video";
   const isPhoto = media?.type === "photo";
   const tweetMedia = isPhoto
-    ? getMediaUrl(extractMediaInfentifierFromUrl(media?.media_url_https))
+    ? getMediaUrl(extractMediaIdentifierFromUrl(media?.media_url_https))
     : null;
   const tweetMediaAltText = isPhoto
     ? `Archived image from tweet by ${tweetAuthor}`
@@ -171,8 +183,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   const formattedDate = new Date(tweet.created_at).toLocaleString();
   const kanyeEra = findEra(new Date(tweet.created_at));
   const eraContent = Array.isArray(kanyeEra) ? kanyeEra.join(", ") : kanyeEra;
-
-  console.log(tweet);
 
   return (
     <div className="flex flex-col items-center justify-between p-4">

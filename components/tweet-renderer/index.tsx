@@ -1,4 +1,4 @@
-import TweetImage from "@/components/tweet-renderer/internals/tweet-image";
+import TweetMedia from "@/components/tweet-renderer/internals/tweet-media";
 import TweetLinkPreview from "@/components/tweet-renderer/internals/tweet-link-preview";
 import TweetText from "@/components/tweet-renderer/internals/tweet-text";
 import { Tweet } from "@/lib/types";
@@ -41,7 +41,7 @@ export default function TweetRendererV2({
 
       {/* Tweet Media */}
       {hasMedia && renderMedia && (
-        <TweetImage media={tweetMedia || []} />
+        <TweetMedia media={tweetMedia || []} />
       )}
 
       {/* Tweet Link Previews */}

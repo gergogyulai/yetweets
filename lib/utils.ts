@@ -5,6 +5,8 @@ import { type Tweet } from "@/lib/types";
 export const VAULT_URL =
   "https://raw.githubusercontent.com/yetweets/vault/main";
 
+export const VAULT_REPO = "yetweets/vault";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -90,7 +92,7 @@ export function extractMediaIdentifier(data: Tweet): string | null {
   return null;
 }
 
-export function extractMediaInfentifierFromUrl(url: string): string {
+export function extractMediaIdentifierFromUrl(url: string): string {
   const matches = url.match(/\/media\/([^.]+)/);
   return matches && matches[1] ? matches[1] : "";
 }

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_OPTIONS='--inspect' next dev --turbo",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -49,7 +49,7 @@
     "embla-carousel-react": "^8.3.0",
     "input-otp": "^1.2.4",
     "jsdom": "^25.0.1",
-    "lucide-react": "0.453.0",
+    "lucide-react": "0.454.0",
     "next": "15.0.0",
     "next-themes": "^0.3.0",
     "react": "19.0.0-rc-65a56d0e-20241020",

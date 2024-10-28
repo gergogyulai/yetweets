@@ -152,12 +152,41 @@ export default async function ArchivePage() {
   const sortedData = data.sort(
     (a, b) =>
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-  );
+  )
   // .slice(0, 10); // Limit to the first 10 items
+
+  const numberOfTweets = sortedData.length;
+  const numberOfMedia = sortedData.filter(
+    (tweet) => tweet.extended_entities?.media?.some((media) => media.type === 'photo'),
+  ).length;
+  const numberOfDeleted = sortedData.filter((tweet) => tweet.deleted).length;
+  const oldestTweet = sortedData[sortedData.length - 1];
+  const newestTweet = sortedData[0];
 
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 md:py-12">
+        <header className="mb-8">
+          <h1 className="text-4xl font-bold">Archive</h1>
+          <p className="text-lg text-muted-foreground">
+            {numberOfTweets} tweets
+            {numberOfMedia > 0 && ` · ${numberOfMedia} media items`}
+            {numberOfDeleted > 0 && ` · ${numberOfDeleted} deleted`}
+            <br />
+            {/* {`From ${new Date(oldestTweet.created_at).toLocaleDateString()} to ${new Date(newestTweet.created_at).toLocaleDateString()}`} */}
+            <p>
+              <Link href={`/archive/tweets/${oldestTweet.id_str}`} className="hover:underline">
+                <span>From {new Date(oldestTweet.created_at).toLocaleDateString()}</span>
+              </Link>
+            </p>
+
+            <p>
+              <Link href={`/archive/tweets/${newestTweet.id_str}`} className="hover:underline">
+                <span>To {new Date(newestTweet.created_at).toLocaleDateString()}</span>
+              </Link>
+            </p>
+          </p>
+        </header>
         <main className="grid auto-rows-fr gap-6 lg:grid-cols-2 xl:grid-cols-3">
           {sortedData.map((item: Tweet, index: number) => (
             <TweetCard key={index} tweet={item} />

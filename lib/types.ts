@@ -42,12 +42,6 @@ export type ExtendedTweet = {
   extended_entities?: ExtendedEntities;
 };
 
-export type MinimalTweet = {
-  created_at: string;
-  id_str: string;
-  text: string;
-};
-
 export type Media = {
   display_url?: string;
   expanded_url?: string;
@@ -64,6 +58,18 @@ export type Media = {
   };
   type?: string;
   url?: string;
+  additional_media_info?: {
+    monetizable: boolean;
+  };
+  video_info?: {
+    aspect_ratio: [number, number];
+    duration_millis: number;
+    variants: Array<{
+      bitrate?: number;
+      content_type: string;
+      url: string;
+    }>;
+  };
 };
 
 export type ExtendedEntities = {
@@ -94,6 +100,12 @@ export type LinkPreviewMetaData = {
   title: string;
   description: string;
   image: string;
+};
+
+export type MinimalTweet = {
+  created_at: string;
+  id_str: string;
+  text: string;
 };
 
 // export type User = {
