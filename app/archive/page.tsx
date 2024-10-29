@@ -33,7 +33,7 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
   return (
     <Link
       href={`/archive/tweets/${tweet.id_str}`}
-      // prefetch={false}
+      prefetch={false}
       className="block w-full"
     >
       <Card className="mb-6 flex h-full flex-col justify-between transition-all ease-in-out hover:border-black dark:hover:border-white">
