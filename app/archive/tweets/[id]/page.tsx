@@ -84,8 +84,10 @@ export async function generateMetadata(props: {
   const isTruncated = tweet.truncated;
   const isLegacyImported = tweet.legacy_imported;
 
+  // @typescript-eslint/no-non-null-asserted-optional-chain
+  // add back ! to tweet.extended_tweet?.full_text 89:7  Error: Optional chain expressions can return undefined by design - using a non-null assertion is unsafe and wrong.  @typescript-eslint/no-non-null-asserted-optional-chain
   const tweetText = isTruncated
-    ? tweet.extended_tweet?.full_text!
+    ? tweet.extended_tweet?.full_text
     : tweet.text;
 
   const media = isLegacyImported
@@ -109,11 +111,11 @@ export async function generateMetadata(props: {
     : "Unknown date";
 
   return {
-    title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(removeTcoLink(tweetText))}" | Ye Tweets Archive`,
-    description: `Archived Tweet from ${tweetAuthor} posted on ${tweetCreationDate}: "${removeTcoLink(tweetText)}"`,
+    title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(removeTcoLink(tweetText || ""))}" | Ye Tweets Archive`,
+    description: `Archived Tweet from ${tweetAuthor} posted on ${tweetCreationDate}: "${removeTcoLink(tweetText || "")}"`,
     openGraph: {
-      title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(removeTcoLink(tweetText))}"`,
-      description: `View this archived Tweet from ${tweetAuthor}, originally posted on ${tweetCreationDate}. ${removeTcoLink(tweetText)}`,
+      title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(removeTcoLink(tweetText || ""))}"`,
+      description: `View this archived Tweet from ${tweetAuthor}, originally posted on ${tweetCreationDate}. ${removeTcoLink(tweetText || "")}`,
       images: [
         {
           url: imageForMetadata,
@@ -127,8 +129,8 @@ export async function generateMetadata(props: {
     },
     twitter: {
       card: tweetMedia ? "summary_large_image" : "summary",
-      title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(removeTcoLink(tweetText))}"`,
-      description: `Archived Tweet originally posted on ${tweetCreationDate}: "${removeTcoLink(tweetText)}"`,
+      title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(removeTcoLink(tweetText || ""))}"`,
+      description: `Archived Tweet originally posted on ${tweetCreationDate}: "${removeTcoLink(tweetText || "")}"`,
       images: [imageForMetadata],
     },
   };
