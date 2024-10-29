@@ -17,56 +17,12 @@ import {
 import findEra from "@/lib/era";
 import { VAULT_URL } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import InfoBar from "@/components/info-bar";
 
 async function fetchTweets(): Promise<Tweet[]> {
   const res = await fetch(`${VAULT_URL}/master.json`);
   return res.json();
 }
-
-const InfoBar = ({ tweet }: { tweet: Tweet }) => {
-  const mediaCount = tweet.extended_entities?.media?.length || 0;
-  const mediaTypes = tweet.extended_entities?.media
-    ? tweet.extended_entities.media.reduce(
-        (acc, media) => {
-          if (media?.type) {
-            acc[media.type] = (acc[media.type] || 0) + 1;
-          }
-          return acc;
-        },
-        {} as Record<string, number>,
-      )
-    : {};
-
-  const formatMediaText = (type: string, count: number) => {
-    if (count === 1) return `${type}`;
-    return `${type}s`;
-  };
-
-  return (
-    <div className="flex gap-2">
-      <Badge className="border-border bg-primary-foreground text-foreground">
-        {tweet.favorite_count} Likes
-      </Badge>
-      <Badge className="border-border bg-primary-foreground text-foreground">
-        {tweet.retweet_count} Retweets
-      </Badge>
-      {mediaCount > 0 && (
-        <Badge className="border-border bg-primary-foreground text-foreground">
-          {mediaCount} Media (
-          {Object.entries(mediaTypes)
-            .map(([type, count]) => formatMediaText(type, count))
-            .join(", ")}
-          )
-        </Badge>
-      )}
-      {tweet.deleted && (
-        <Badge className="border-destructive bg-primary-foreground text-foreground">
-          Deleted
-        </Badge>
-      )}
-    </div>
-  );
-};
 
 function TweetCard({ tweet }: { tweet: Tweet }) {
   const formattedDate = new Date(tweet.created_at).toLocaleDateString();
@@ -156,36 +112,33 @@ export default async function ArchivePage() {
   // .slice(0, 10); // Limit to the first 10 items
 
   const numberOfTweets = sortedData.length;
-  const numberOfMedia = sortedData.filter(
-    (tweet) => tweet.extended_entities?.media?.some((media) => media.type === 'photo'),
-  ).length;
+  const numberOfMedia = sortedData.filter((tweet) => {
+    const isTruncated = tweet.truncated;
+    const isLegacyImported = tweet.legacy_imported;
+
+    const media = isLegacyImported
+      ? tweet.media
+      : isTruncated
+      ? tweet.extended_tweet?.extended_entities?.media
+      : tweet.extended_entities?.media;
+
+    return media?.some((mediaItem) => mediaItem.type === 'photo' || mediaItem.type === 'video');
+  }).length;
+
   const numberOfDeleted = sortedData.filter((tweet) => tweet.deleted).length;
-  const oldestTweet = sortedData[sortedData.length - 1];
-  const newestTweet = sortedData[0];
 
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 md:py-12">
         <header className="mb-8">
           <h1 className="text-4xl font-bold">Archive</h1>
-          <p className="text-lg text-muted-foreground">
-            {numberOfTweets} tweets
-            {numberOfMedia > 0 && ` · ${numberOfMedia} media items`}
-            {numberOfDeleted > 0 && ` · ${numberOfDeleted} deleted`}
-            <br />
-            {/* {`From ${new Date(oldestTweet.created_at).toLocaleDateString()} to ${new Date(newestTweet.created_at).toLocaleDateString()}`} */}
-            <p>
-              <Link href={`/archive/tweets/${oldestTweet.id_str}`} className="hover:underline">
-                <span>From {new Date(oldestTweet.created_at).toLocaleDateString()}</span>
-              </Link>
+          <Link href={"/#statistics"}>
+            <p className="text-lg text-muted-foreground">
+              {numberOfTweets} tweets
+              {numberOfMedia > 0 && ` · ${numberOfMedia} media items`}
+              {numberOfDeleted > 0 && ` · ${numberOfDeleted} deleted`}
             </p>
-
-            <p>
-              <Link href={`/archive/tweets/${newestTweet.id_str}`} className="hover:underline">
-                <span>To {new Date(newestTweet.created_at).toLocaleDateString()}</span>
-              </Link>
-            </p>
-          </p>
+          </Link>
         </header>
         <main className="grid auto-rows-fr gap-6 lg:grid-cols-2 xl:grid-cols-3">
           {sortedData.map((item: Tweet, index: number) => (

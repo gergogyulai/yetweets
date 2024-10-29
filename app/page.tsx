@@ -3,6 +3,7 @@ import { MinimalTweet } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { GithubIcon } from "lucide-react";
 import FeaturedTweetCard from "@/components/featured-tweet";
+import TwitterArchiveStats from "@/components/tweet-archive-stats";
 
 const featuredTweets: MinimalTweet[] = [
   {
@@ -26,7 +27,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <main className="flex-grow">
-        <section className="py-20 md:py-32">
+        <section className="py-20 md:py-32" id="hero">
           <div className="container mx-auto px-4 text-center">
             <h1 className="mb-6 text-5xl font-bold md:text-6xl">
               Ye Tweets Archive
@@ -51,7 +52,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="py-16 md:py-24">
+        <section className="py-16 md:py-24" id="featured-highlighted">
           <div className="container mx-auto px-4">
             <Link href="/highlights" passHref>
               <h2 className="mb-8 text-center text-3xl font-semibold">
@@ -66,7 +67,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="bg-muted py-16 md:py-24">
+        <section className="bg-muted py-16 md:py-24" id="contribute">
           <div className="container mx-auto px-4 text-center">
             <h2 className="mb-6 text-3xl font-semibold">
               Contribute to the Archive
@@ -89,7 +90,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="py-16 md:py-24">
+        <section className="py-16 md:py-24" id="about">
           <div className="container mx-auto px-4 text-center">
             <h2 className="mb-6 text-3xl font-semibold">About the Project</h2>
             <p className="mx-auto max-w-2xl text-xl">
@@ -108,6 +109,13 @@ export default function Home() {
             </p>
           </div>
         </section>
+
+        <section className="py-16 md:py-24" id="statistics">
+          <div className="container mx-auto px-4">
+          <h2 className="mb-6 text-3xl font-semibold text-center">Archive Statistics</h2>
+            <TwitterArchiveStats />
+          </div>
+        </section>
       </main>
 
       <footer className="border-t py-8">
@@ -117,6 +125,9 @@ export default function Home() {
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
             This project is for educational and archival purposes only.
+          </p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            All tweets and media are property of the indicated original authors.
           </p>
         </div>
       </footer>

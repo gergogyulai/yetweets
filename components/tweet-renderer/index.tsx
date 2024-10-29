@@ -22,9 +22,15 @@ export default function TweetRendererV2({
   }
 
   const isTruncated = tweet.truncated;
+  const isLegacyImported = tweet.legacy_imported;
   const tweetText = isTruncated ? tweet.extended_tweet?.full_text : tweet.text;
   const tweetEntities = isTruncated ? tweet.extended_tweet?.entities : tweet.entities;
-  const tweetMedia = isTruncated ? tweet.extended_tweet?.extended_entities?.media : tweet.extended_entities?.media;
+  
+  const tweetMedia = isLegacyImported
+    ? tweet.media
+    : isTruncated
+    ? tweet.extended_tweet?.extended_entities?.media
+    : tweet.extended_entities?.media;
 
   const hasMedia = (tweetMedia?.length ?? 0) > 0;
   const urls = tweetEntities?.urls || [];

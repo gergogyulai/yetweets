@@ -16,6 +16,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { VAULT_URL } from "@/lib/utils";
 import TweetRendererV2 from "@/components/tweet-renderer";
+import InfoBar from "@/components/info-bar";
 
 export const dynamic = "force-static"
 export const dynamicParams = true
@@ -46,10 +47,9 @@ export async function generateMetadata(props: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const params = await props.params;
-
   const { id } = params;
 
-  const tweet = await getData(id);
+  const tweet: Tweet | null = await getData(id);
 
   if (!tweet) {
     return {
@@ -81,38 +81,44 @@ export async function generateMetadata(props: {
     };
   }
 
-  const tweetText = removeTcoLink(tweet.text) || "View this archived Tweet";
+  const isTruncated = tweet.truncated;
+  const isLegacyImported = tweet.legacy_imported;
+
+  const tweetText = isTruncated
+    ? tweet.extended_tweet?.full_text!
+    : tweet.text;
+
+  const media = isLegacyImported
+    ? tweet.media
+    : isTruncated
+    ? tweet.extended_tweet?.extended_entities?.media
+    : tweet.extended_entities?.media;
+
+  const isPhoto = media?.[0]?.type === "photo";
+  const tweetMedia = isPhoto
+    ? getMediaUrl(extractMediaIdentifierFromUrl(media?.[0]?.media_url_https))
+    : null;
+  const tweetMediaAltText = isPhoto
+    ? `Archived image from tweet by ye`
+    : "Archived media from tweet";
+  const fallbackImage = "/og.png";
+  const imageForMetadata = tweetMedia || fallbackImage;
   const tweetAuthor = "ye";
   const tweetCreationDate = tweet?.created_at
     ? new Date(tweet.created_at).toLocaleString("en-US", { timeZone: "UTC" })
     : "Unknown date";
-  const media = tweet?.extended_entities?.media?.[0];
-  // const isVideo = media?.type === "video";
-  const isPhoto = media?.type === "photo";
-  const tweetMedia = isPhoto
-    ? getMediaUrl(extractMediaIdentifierFromUrl(media?.media_url_https))
-    : null;
-  const tweetMediaAltText = isPhoto
-    ? `Archived image from tweet by ${tweetAuthor}`
-    : "Archived media from tweet";
-  const fallbackImage = "/og.png";
-  const imageForMetadata = tweetMedia || fallbackImage;
 
   return {
-    title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(
-      tweetText,
-    )}" | Ye Tweets Archive`,
-    description: `Archived Tweet from ${tweetAuthor} posted on ${tweetCreationDate}: "${tweetText}"`,
+    title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(removeTcoLink(tweetText))}" | Ye Tweets Archive`,
+    description: `Archived Tweet from ${tweetAuthor} posted on ${tweetCreationDate}: "${removeTcoLink(tweetText)}"`,
     openGraph: {
-      title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(
-        tweetText,
-      )}"`,
-      description: `View this archived Tweet from ${tweetAuthor}, originally posted on ${tweetCreationDate}. ${tweetText}`,
+      title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(removeTcoLink(tweetText))}"`,
+      description: `View this archived Tweet from ${tweetAuthor}, originally posted on ${tweetCreationDate}. ${removeTcoLink(tweetText)}`,
       images: [
         {
           url: imageForMetadata,
-          width: isPhoto ? media?.sizes?.large?.w || 1280 : 1280,
-          height: isPhoto ? media?.sizes?.large?.h || 720 : 720,
+          width: isPhoto ? media?.[0]?.sizes?.large?.w || 1280 : 1280,
+          height: isPhoto ? media?.[0]?.sizes?.large?.h || 720 : 720,
           alt: tweetMediaAltText || `Archived Tweet ${id} | Ye Tweets Archive`,
         },
       ],
@@ -121,59 +127,12 @@ export async function generateMetadata(props: {
     },
     twitter: {
       card: tweetMedia ? "summary_large_image" : "summary",
-      title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(
-        tweetText,
-      )}"`,
-      description: `Archived Tweet originally posted on ${tweetCreationDate}: "${tweetText}"`,
+      title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(removeTcoLink(tweetText))}"`,
+      description: `Archived Tweet originally posted on ${tweetCreationDate}: "${removeTcoLink(tweetText)}"`,
       images: [imageForMetadata],
     },
   };
 }
-
-const InfoBar = ({ tweet }: { tweet: Tweet }) => {
-  const mediaCount = tweet.extended_entities?.media?.length || 0;
-  const mediaTypes = tweet.extended_entities?.media
-    ? tweet.extended_entities.media.reduce(
-        (acc, media) => {
-          if (media?.type) {
-            acc[media.type] = (acc[media.type] || 0) + 1;
-          }
-          return acc;
-        },
-        {} as Record<string, number>,
-      )
-    : {};
-
-  const formatMediaText = (type: string, count: number) => {
-    if (count === 1) return `${type}`;
-    return `${type}s`;
-  };
-
-  return (
-    <div className="flex select-none gap-2">
-      <Badge className="border-border bg-primary-foreground text-foreground">
-        {tweet.favorite_count} Likes
-      </Badge>
-      <Badge className="border-border bg-primary-foreground text-foreground">
-        {tweet.retweet_count} Retweets
-      </Badge>
-      {mediaCount > 0 && (
-        <Badge className="border-border bg-primary-foreground text-foreground">
-          {mediaCount} Media (
-          {Object.entries(mediaTypes)
-            .map(([type, count]) => formatMediaText(type, count))
-            .join(", ")}
-          )
-        </Badge>
-      )}
-      {tweet.deleted && (
-        <Badge className="border-destructive bg-primary-foreground text-foreground">
-          Deleted
-        </Badge>
-      )}
-    </div>
-  );
-};
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;

@@ -15,6 +15,7 @@ export type Tweet = {
   user: {
     id: number;
   };
+  media?: Media[];
   user_mentions: string[];
   extended_entities?: ExtendedEntities;
   coordinates?: Coordinates | null;
