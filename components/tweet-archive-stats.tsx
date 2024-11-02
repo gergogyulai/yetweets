@@ -1,11 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { FileImage, FileVideo, MessageSquare, Trash2, Clock, FolderArchive } from "lucide-react"
-
-// Import types and constants
 import { Tweet } from "@/lib/types"
 import { VAULT_URL, VAULT_REPO } from "@/lib/utils"
 
-// Fetch functions remain the same
 async function fetchArchivedTweets(): Promise<Tweet[]> {
   const res = await fetch(`${VAULT_URL}/master.json`)
   return res.json()
@@ -25,7 +22,6 @@ async function fetchArchivedVideos() {
   return response.json()
 }
 
-// Helper function remains the same
 function hasMediaType(tweet: Tweet, type: string): boolean {
   const isTruncated = tweet.truncated
   const isLegacyImported = tweet.legacy_imported
@@ -72,7 +68,6 @@ export default async function TwitterArchiveStats() {
 
   return (
     <div className="px-4 md:px-6">
-      {/* <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12">Twitter Archive Statistics</h2> */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
