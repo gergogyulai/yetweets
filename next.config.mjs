@@ -5,7 +5,7 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "raw.githubusercontent.com",
-        pathname: "/yetweets/vault/refs/heads/main/**",
+        pathname: "/yetweets/vault/**",
       },
     ],
   }
