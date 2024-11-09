@@ -98,7 +98,7 @@ const ProfileCard = ({ tweet }: { tweet: Tweet }) => {
 export default function Profile({ tweet }: { tweet: Tweet }) {
   return (
     <HoverCard>
-      <HoverCardTrigger>
+      <HoverCardTrigger asChild>
         <InlineProfile tweet={tweet} />
       </HoverCardTrigger>
       <HoverCardContent className="max-w-lg w-80 select-none">

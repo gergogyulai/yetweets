@@ -18,6 +18,7 @@ import findEra from "@/lib/era";
 import { VAULT_URL } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import InfoBar from "@/components/info-bar";
+import Profile from "@/components/profile-picture";
 
 async function fetchTweets(): Promise<Tweet[]> {
   const res = await fetch(`${VAULT_URL}/master.json`);
@@ -39,7 +40,7 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
       <Card className="mb-6 flex h-full flex-col justify-between transition-all ease-in-out hover:border-black dark:hover:border-white">
         <CardHeader className="flex w-full pb-0">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            {/* <div className="flex items-center gap-4">
               <Image
                 src="/pfp.jpg"
                 alt="Kanye West"
@@ -55,7 +56,8 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
                   @kanyewest
                 </span>
               </div>
-            </div>
+            </div> */}
+            <Profile tweet={tweet} />
             <div className="flex gap-2">
               {tweet?.retweeted_status && (
                 <Badge className="border-border bg-primary-foreground text-foreground">
