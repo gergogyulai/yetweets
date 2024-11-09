@@ -48,6 +48,8 @@ const ProfilePicture: React.FC<{ url: string }> = React.memo(({ url }) => (
   />
 ))
 
+ProfilePicture.displayName = 'ProfilePicture'
+
 const ProfileName: React.FC<{ displayName: string; username: string }> = React.memo(
   ({ displayName, username }) => (
     <div className="flex flex-col">
@@ -56,6 +58,8 @@ const ProfileName: React.FC<{ displayName: string; username: string }> = React.m
     </div>
   )
 )
+
+ProfileName.displayName = 'ProfileName'
 
 const InlineProfile: React.FC<{ profileData: ProfileData }> = React.memo(({ profileData }) => (
   <div className="flex items-center gap-4">
@@ -67,6 +71,8 @@ const InlineProfile: React.FC<{ profileData: ProfileData }> = React.memo(({ prof
     </Link>
   </div>
 ))
+
+InlineProfile.displayName = 'InlineProfile'
 
 const ProfileCard: React.FC<{ profileData: ProfileData }> = React.memo(({ profileData }) => (
   <div className="flex flex-col gap-2">
