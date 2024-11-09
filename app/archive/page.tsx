@@ -16,8 +16,8 @@ import {
 } from "@/components/ui/tooltip";
 import findEra from "@/lib/era";
 import { VAULT_URL } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 import InfoBar from "@/components/info-bar";
+import TweetRendererV2 from "@/components/tweet-renderer";
 
 async function fetchTweets(): Promise<Tweet[]> {
   const res = await fetch(`${VAULT_URL}/master.json`);
@@ -34,9 +34,8 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
     <Link
       href={`/archive/tweets/${tweet.id_str}`}
       prefetch={false}
-      className="block w-full"
     >
-      <Card className="mb-6 flex h-full flex-col justify-between transition-all ease-in-out hover:border-black dark:hover:border-white">
+      <Card className="flex flex-col h-fit justify-between transition-all ease-in-out hover:border-black dark:hover:border-white">
         <CardHeader className="flex w-full pb-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -56,7 +55,7 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
                 </span>
               </div>
             </div>
-            <div className="flex gap-2">
+            {/* <div className="flex gap-2">
               {tweet?.retweeted_status && (
                 <Badge className="border-border bg-primary-foreground text-foreground">
                   Retweeted
@@ -72,12 +71,25 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
                   Reply
                 </Badge>
               )}
-            </div>
+            </div> */}
+            {/* <DropdownMenu>
+              <DropdownMenuTrigger>
+                <DotsVerticalIcon className="w-5 h-5 text-muted-foreground" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="font-mono">
+                <DropdownMenuItem>View</DropdownMenuItem>
+                <DropdownMenuItem>View raw JSON</DropdownMenuItem>
+                <DropdownMenuItem>Copy shareable url</DropdownMenuItem>
+                <DropdownMenuItem>
+                  Report issue
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+          </DropdownMenu> */}
           </div>
         </CardHeader>
         <CardContent className="p-6">
           <div className="text-xl font-semibold leading-relaxed">
-            {tweet.text}
+            <TweetRendererV2 tweet={tweet}/>
           </div>
         </CardContent>
         <CardFooter className="flex w-full flex-col gap-2">
@@ -109,7 +121,8 @@ export default async function ArchivePage() {
     (a, b) =>
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
   )
-  // .slice(0, 10); // Limit to the first 10 items
+  .slice(50, 50+10
+  ); // Limit to the first 10 items
 
   const numberOfTweets = sortedData.length;
   const numberOfMedia = sortedData.filter((tweet) => {
@@ -140,7 +153,8 @@ export default async function ArchivePage() {
             </p>
           </Link>
         </header>
-        <main className="grid auto-rows-fr gap-6 lg:grid-cols-2 xl:grid-cols-3">
+        {/* <Search placeholder="Search the archive..."/> */}
+        <main className="grid gap-4 lg:grid-cols-2 xl:grid-cols-1 max-w-xl">
           {sortedData.map((item: Tweet, index: number) => (
             <TweetCard key={index} tweet={item} />
           ))}

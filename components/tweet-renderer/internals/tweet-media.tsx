@@ -25,7 +25,8 @@ export default async function TweetMedia({ media }: { media: Media[] }) {
     media.map(async (item) => {
       const isVideo = item.expanded_url?.includes("video") || item.type === "video";
       const identifier = isVideo ? item.id_str : extractMediaIdentifierFromUrl(item.media_url_https);
-      const isArchived = identifier ? await isMediaArchived(identifier, isVideo ? "video" : "photo") : false;
+      // const isArchived = identifier ? await isMediaArchived(identifier, isVideo ? "video" : "photo") : true;
+      const isArchived = true;
       const mediaUrl = isArchived ? `${VAULT_URL}/${isVideo ? "videos" : "media"}/${identifier}.${isVideo ? "mp4" : "jpg"}` : null;
 
       return { ...item, isVideo, isArchived, mediaUrl };
