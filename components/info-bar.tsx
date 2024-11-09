@@ -6,16 +6,17 @@ const InfoBar = ({ tweet }: { tweet: Tweet }) => {
   const mediaCount = isLegacyImported
     ? tweet.media?.length || 0
     : tweet.extended_entities?.media?.length || 0;
-    
-  const mediaTypes = (isLegacyImported ? tweet.media : tweet.extended_entities?.media)?.reduce(
-    (acc, media) => {
-      if (media?.type) {
-        acc[media.type] = (acc[media.type] || 0) + 1;
-      }
-      return acc;
-    },
-    {} as Record<string, number>,
-  ) || {};
+
+  const mediaTypes =
+    (isLegacyImported ? tweet.media : tweet.extended_entities?.media)?.reduce(
+      (acc, media) => {
+        if (media?.type) {
+          acc[media.type] = (acc[media.type] || 0) + 1;
+        }
+        return acc;
+      },
+      {} as Record<string, number>,
+    ) || {};
 
   const formatMediaText = (type: string, count: number) => {
     if (count === 1) return `${type}`;

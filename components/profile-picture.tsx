@@ -27,7 +27,9 @@ const getDisplayName = (tweet: Tweet): string => {
 };
 
 const getUsername = (tweet: Tweet): string => {
-  return tweet.user?.screen_name ? `@${tweet.user.screen_name}` : fallbackUsername;
+  return tweet.user?.screen_name
+    ? `@${tweet.user.screen_name}`
+    : fallbackUsername;
 };
 
 const ProfilePicture = ({ url }: { url: string }) => (
@@ -40,9 +42,17 @@ const ProfilePicture = ({ url }: { url: string }) => (
   />
 );
 
-const ProfileName = ({ displayName, username }: { displayName: string; username: string }) => (
+const ProfileName = ({
+  displayName,
+  username,
+}: {
+  displayName: string;
+  username: string;
+}) => (
   <div className="flex flex-col">
-    <span className="font-semibold leading-none tracking-tight">{displayName}</span>
+    <span className="font-semibold leading-none tracking-tight">
+      {displayName}
+    </span>
     <span className="text-sm text-muted-foreground">{username}</span>
   </div>
 );
@@ -70,7 +80,7 @@ const ProfileCard = ({ tweet }: { tweet: Tweet }) => {
   const username = getUsername(tweet);
 
   return (
-    <div className="flex flex-col gap-2"> 
+    <div className="flex flex-col gap-2">
       <div className="flex items-center gap-4">
         <ProfilePicture url={profileImageUrl} />
         <ProfileName displayName={displayName} username={username} />
@@ -81,14 +91,23 @@ const ProfileCard = ({ tweet }: { tweet: Tweet }) => {
         </span>
         <div className="flex gap-2">
           <span className="text-sm text-muted-foreground">
-            <span className="font-semibold">{formattedLargeNumber(tweet.user?.friends_count || 0)}</span> Following
+            <span className="font-semibold">
+              {formattedLargeNumber(tweet.user?.friends_count || 0)}
+            </span>{" "}
+            Following
           </span>
           <span className="text-sm text-muted-foreground">
-            <span className="font-semibold">{formattedLargeNumber(tweet.user?.followers_count || 0)}</span> Followers
+            <span className="font-semibold">
+              {formattedLargeNumber(tweet.user?.followers_count || 0)}
+            </span>{" "}
+            Followers
           </span>
         </div>
         {tweet.user?.created_at && (
-          <span className="text-sm text-muted-foreground">Account created: {new Date(tweet.user.created_at).toLocaleDateString()}</span>
+          <span className="text-sm text-muted-foreground">
+            Account created:{" "}
+            {new Date(tweet.user.created_at).toLocaleDateString()}
+          </span>
         )}
       </div>
     </div>
@@ -101,7 +120,7 @@ export default function Profile({ tweet }: { tweet: Tweet }) {
       <HoverCardTrigger asChild>
         <InlineProfile tweet={tweet} />
       </HoverCardTrigger>
-      <HoverCardContent className="max-w-lg w-80 select-none">
+      <HoverCardContent className="w-80 max-w-lg select-none">
         <ProfileCard tweet={tweet} />
       </HoverCardContent>
     </HoverCard>

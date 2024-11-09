@@ -39,23 +39,6 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
       <Card className="mb-6 flex h-full flex-col justify-between transition-all ease-in-out hover:border-black dark:hover:border-white">
         <CardHeader className="flex w-full pb-0">
           <div className="flex items-center justify-between">
-            {/* <div className="flex items-center gap-4">
-              <Image
-                src="/pfp.jpg"
-                alt="Kanye West"
-                width={48}
-                height={48}
-                className="rounded-full"
-              />
-              <div className="flex flex-col">
-                <span className="font-semibold leading-none tracking-tight">
-                  Kanye West
-                </span>
-                <span className="text-sm text-muted-foreground">
-                  @kanyewest
-                </span>
-              </div>
-            </div> */}
             <Profile tweet={tweet} />
             <div className="flex gap-2">
               {tweet?.retweeted_status && (
@@ -109,7 +92,7 @@ export default async function ArchivePage() {
   const sortedData = data.sort(
     (a, b) =>
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-  )
+  );
   // .slice(0, 10); // Limit to the first 10 items
 
   const numberOfTweets = sortedData.length;
@@ -120,10 +103,12 @@ export default async function ArchivePage() {
     const media = isLegacyImported
       ? tweet.media
       : isTruncated
-      ? tweet.extended_tweet?.extended_entities?.media
-      : tweet.extended_entities?.media;
+        ? tweet.extended_tweet?.extended_entities?.media
+        : tweet.extended_entities?.media;
 
-    return media?.some((mediaItem) => mediaItem.type === 'photo' || mediaItem.type === 'video');
+    return media?.some(
+      (mediaItem) => mediaItem.type === "photo" || mediaItem.type === "video",
+    );
   }).length;
 
   const numberOfDeleted = sortedData.filter((tweet) => tweet.deleted).length;

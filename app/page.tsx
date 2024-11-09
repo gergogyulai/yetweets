@@ -26,7 +26,7 @@ const featuredTweets: MinimalTweet[] = [
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <main className="flex-grow">
+      <main className="grow">
         <section className="py-20 md:py-32" id="hero">
           <div className="container mx-auto px-4 text-center">
             <h1 className="mb-6 text-5xl font-bold md:text-6xl">
@@ -112,7 +112,9 @@ export default function Home() {
 
         <section className="py-16 md:py-24" id="statistics">
           <div className="container mx-auto px-4">
-          <h2 className="mb-6 text-3xl font-semibold text-center">Archive Statistics</h2>
+            <h2 className="mb-6 text-center text-3xl font-semibold">
+              Archive Statistics
+            </h2>
             <TwitterArchiveStats />
           </div>
         </section>

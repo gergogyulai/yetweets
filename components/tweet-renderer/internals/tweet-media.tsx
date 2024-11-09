@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { type Media } from "@/lib/types";
-import { 
-  // VAULT_REPO, 
-  VAULT_URL, 
-  extractMediaIdentifierFromUrl 
+import {
+  // VAULT_REPO,
+  VAULT_URL,
+  extractMediaIdentifierFromUrl,
 } from "@/lib/utils";
 
 type GridClass = "grid-cols-1" | "grid-cols-2";
@@ -15,7 +15,9 @@ function getGridClass(count: number): GridClass {
 }
 
 function getImageClass(index: number, count: number): ImageClass {
-  return count === 3 && index === 0 ? "col-span-2 row-span-2" : "col-span-1 row-span-1";
+  return count === 3 && index === 0
+    ? "col-span-2 row-span-2"
+    : "col-span-1 row-span-1";
 }
 
 // async function isMediaArchived(mediaId: string, mediaType: "photo" | "video"): Promise<boolean> {
@@ -27,14 +29,19 @@ function getImageClass(index: number, count: number): ImageClass {
 export default async function TweetMedia({ media }: { media: Media[] }) {
   const mediaItems = await Promise.all(
     media.map(async (item) => {
-      const isVideo = item.expanded_url?.includes("video") || item.type === "video";
-      const identifier = isVideo ? item.id_str : extractMediaIdentifierFromUrl(item.media_url_https);
+      const isVideo =
+        item.expanded_url?.includes("video") || item.type === "video";
+      const identifier = isVideo
+        ? item.id_str
+        : extractMediaIdentifierFromUrl(item.media_url_https);
       // const isArchived = identifier ? await isMediaArchived(identifier, isVideo ? "video" : "photo") : true;
       const isArchived = true;
-      const mediaUrl = isArchived ? `${VAULT_URL}/${isVideo ? "videos" : "media"}/${identifier}.${isVideo ? "mp4" : "jpg"}` : null;
+      const mediaUrl = isArchived
+        ? `${VAULT_URL}/${isVideo ? "videos" : "media"}/${identifier}.${isVideo ? "mp4" : "jpg"}`
+        : null;
 
       return { ...item, isVideo, isArchived, mediaUrl };
-    })
+    }),
   );
 
   if (mediaItems[0].isVideo) {
@@ -44,12 +51,17 @@ export default async function TweetMedia({ media }: { media: Media[] }) {
         <p>Your browser does not support the video tag.</p>
       </video>
     ) : (
-      <p className="mt-2 text-sm text-muted-foreground">This video is not archived yet. Come back later, or submit it to the archive :)</p>
+      <p className="mt-2 text-sm text-muted-foreground">
+        This video is not archived yet. Come back later, or submit it to the
+        archive :)
+      </p>
     );
   }
 
   return (
-    <div className={`grid ${getGridClass(mediaItems.length)} max-w-2xl gap-1 overflow-hidden rounded-md`}>
+    <div
+      className={`grid ${getGridClass(mediaItems.length)} max-w-2xl gap-1 overflow-hidden rounded-md`}
+    >
       {mediaItems.map((item, index) => (
         <div
           key={item.id_str}

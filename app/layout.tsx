@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@vercel/analytics/react";
 import Link from "next/link";
-import { Geist_Mono } from 'next/font/google'
+import { Geist_Mono } from "next/font/google";
 
-const geistMono = Geist_Mono( { subsets: ['latin'] } )
+const geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Ye Tweets",
@@ -75,7 +75,7 @@ export default function RootLayout({
         >
           <div className="flex flex-col items-center font-mono">
             <div className="w-full">
-              <div className="flex-grow">
+              <div className="grow">
                 <header className="border-b">
                   <div className="container mx-auto px-4">
                     <nav className="flex h-16 items-center justify-between">

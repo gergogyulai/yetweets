@@ -18,8 +18,8 @@ import TweetRendererV2 from "@/components/tweet-renderer";
 import InfoBar from "@/components/info-bar";
 import Profile from "@/components/profile-picture";
 
-export const dynamic = "force-static"
-export const dynamicParams = true
+export const dynamic = "force-static";
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const res = await fetch(`${VAULT_URL}/master.json`);
@@ -86,15 +86,13 @@ export async function generateMetadata(props: {
 
   // @typescript-eslint/no-non-null-asserted-optional-chain
   // add back ! to tweet.extended_tweet?.full_text 89:7  Error: Optional chain expressions can return undefined by design - using a non-null assertion is unsafe and wrong.  @typescript-eslint/no-non-null-asserted-optional-chain
-  const tweetText = isTruncated
-    ? tweet.extended_tweet?.full_text
-    : tweet.text;
+  const tweetText = isTruncated ? tweet.extended_tweet?.full_text : tweet.text;
 
   const media = isLegacyImported
     ? tweet.media
     : isTruncated
-    ? tweet.extended_tweet?.extended_entities?.media
-    : tweet.extended_entities?.media;
+      ? tweet.extended_tweet?.extended_entities?.media
+      : tweet.extended_entities?.media;
 
   const isPhoto = media?.[0]?.type === "photo";
   const tweetMedia = isPhoto
@@ -150,29 +148,8 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
       <Card className="w-full max-w-xl bg-card text-card-foreground shadow">
         <CardContent className="flex flex-col p-6">
           <div className="mb-4 flex items-center justify-between">
-            {/* <div className="flex items-center gap-4">
-              <Link href={"/archive"} className="rounded-full">
-                <Image
-                  src="/pfp.jpg"
-                  alt="Kanye West"
-                  width={45}
-                  height={45}
-                  className="rounded-full transition-all ease-in-out hover:brightness-75"
-                />
-              </Link>
-              <Link href={"/archive"} className="hover:underline">
-                <div className="mt-[2px] flex flex-col">
-                  <span className="font-semibold leading-none tracking-tight">
-                    ye
-                  </span>
-                  <span className="text-sm text-muted-foreground">
-                    @kanyewest
-                  </span>
-                </div>
-              </Link>
-            </div> */}
             <Profile tweet={tweet} />
-            <div className="-mt-[8px] flex select-none gap-2">
+            <div className="mt-[-8px] flex select-none gap-2">
               <div className="flex gap-2">
                 {tweet?.retweeted_status && (
                   <Badge className="border-border bg-primary-foreground text-foreground">

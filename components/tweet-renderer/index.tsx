@@ -24,13 +24,15 @@ export default function TweetRendererV2({
   const isTruncated = tweet.truncated;
   const isLegacyImported = tweet.legacy_imported;
   const tweetText = isTruncated ? tweet.extended_tweet?.full_text : tweet.text;
-  const tweetEntities = isTruncated ? tweet.extended_tweet?.entities : tweet.entities;
-  
+  const tweetEntities = isTruncated
+    ? tweet.extended_tweet?.entities
+    : tweet.entities;
+
   const tweetMedia = isLegacyImported
     ? tweet.media
     : isTruncated
-    ? tweet.extended_tweet?.extended_entities?.media
-    : tweet.extended_entities?.media;
+      ? tweet.extended_tweet?.extended_entities?.media
+      : tweet.extended_entities?.media;
 
   const hasMedia = (tweetMedia?.length ?? 0) > 0;
   const urls = tweetEntities?.urls || [];
@@ -46,15 +48,15 @@ export default function TweetRendererV2({
       )}
 
       {/* Tweet Media */}
-      {hasMedia && renderMedia && (
-        <TweetMedia media={tweetMedia || []} />
-      )}
+      {hasMedia && renderMedia && <TweetMedia media={tweetMedia || []} />}
 
       {/* Tweet Link Previews */}
       {hasUrls && renderLinkPreviews && (
         <div>
           {urls
-            .filter((url: { expanded_url: string }) => isValidUrl(url.expanded_url))
+            .filter((url: { expanded_url: string }) =>
+              isValidUrl(url.expanded_url),
+            )
             .map((url: { expanded_url: string }, index: number) => (
               <TweetLinkPreview key={index} url={url.expanded_url} />
             ))}

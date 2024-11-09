@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 const Share = ({ shareUrl }: { shareUrl: string }) => {
   return (
     <div className="flex w-full space-x-2">
-      <Input value={shareUrl} readOnly className="flex-grow" />
+      <Input value={shareUrl} readOnly className="grow" />
       <Button onClick={() => navigator.clipboard.writeText(shareUrl)}>
         Copy
       </Button>

@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+
 import { Card, CardContent } from "@/components/ui/card";
 import extractMetaTags from "@/lib/extract-metadata";
 import { Url } from "@/lib/types";
