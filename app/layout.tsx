@@ -4,7 +4,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@vercel/analytics/react";
 import Link from "next/link";
 import { Geist_Mono } from 'next/font/google'
-const geistMono = Geist_Mono()
+
+const geistMono = Geist_Mono( { subsets: ['latin'] } )
 
 export const metadata: Metadata = {
   title: "Ye Tweets",
