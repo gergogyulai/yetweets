@@ -5,7 +5,10 @@ import { Analytics } from "@vercel/analytics/react";
 import Link from "next/link";
 import { Geist_Mono } from "next/font/google";
 
-const geistMono = Geist_Mono({ subsets: ["latin"] });
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Ye Tweets",
