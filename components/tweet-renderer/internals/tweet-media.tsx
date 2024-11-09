@@ -1,7 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { type Media } from "@/lib/types";
-import { VAULT_REPO, VAULT_URL, extractMediaIdentifierFromUrl } from "@/lib/utils";
+import { 
+  // VAULT_REPO, 
+  VAULT_URL, 
+  extractMediaIdentifierFromUrl 
+} from "@/lib/utils";
 
 type GridClass = "grid-cols-1" | "grid-cols-2";
 type ImageClass = "col-span-1 row-span-1" | "col-span-2 row-span-2";
@@ -14,11 +18,11 @@ function getImageClass(index: number, count: number): ImageClass {
   return count === 3 && index === 0 ? "col-span-2 row-span-2" : "col-span-1 row-span-1";
 }
 
-async function isMediaArchived(mediaId: string, mediaType: "photo" | "video"): Promise<boolean> {
-  const path = mediaType === "photo" ? `media/${mediaId}.jpg` : `videos/${mediaId}.mp4`;
-  const response = await fetch(`https://api.github.com/repos/${VAULT_REPO}/contents/${path}`);
-  return response.ok;
-}
+// async function isMediaArchived(mediaId: string, mediaType: "photo" | "video"): Promise<boolean> {
+//   const path = mediaType === "photo" ? `media/${mediaId}.jpg` : `videos/${mediaId}.mp4`;
+//   const response = await fetch(`https://api.github.com/repos/${VAULT_REPO}/contents/${path}`);
+//   return response.ok;
+// }
 
 export default async function TweetMedia({ media }: { media: Media[] }) {
   const mediaItems = await Promise.all(
