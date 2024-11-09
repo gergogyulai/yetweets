@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { VAULT_URL } from "@/lib/utils";
 import TweetRendererV2 from "@/components/tweet-renderer";
 import InfoBar from "@/components/info-bar";
+import Profile from "@/components/profile-picture";
 
 export const dynamic = "force-static"
 export const dynamicParams = true
@@ -150,7 +151,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
       <Card className="w-full max-w-xl bg-card text-card-foreground shadow">
         <CardContent className="flex flex-col p-6">
           <div className="mb-4 flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            {/* <div className="flex items-center gap-4">
               <Link href={"/archive"} className="rounded-full">
                 <Image
                   src="/pfp.jpg"
@@ -170,7 +171,8 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
                   </span>
                 </div>
               </Link>
-            </div>
+            </div> */}
+            <Profile tweet={tweet} />
             <div className="-mt-[8px] flex select-none gap-2">
               <div className="flex gap-2">
                 {tweet?.retweeted_status && (

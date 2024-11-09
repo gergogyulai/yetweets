@@ -108,3 +108,15 @@ export function isValidUrl(url: string) {
 export function removeHorizonatalEllipsis(str: string): string {
   return str.replace(/…/g, "");
 }
+
+export function extractProfileImageId(url: string): string {
+  const match = url.match(/\/profile_images\/\d+\/([^\/]+)_/);
+  return match ? match[1] : "";
+}
+
+export function formattedLargeNumber(number: number): string {
+  return new Intl.NumberFormat("en-US", {
+    notation: "compact",
+    compactDisplay: "short",
+  }).format(number);
+}

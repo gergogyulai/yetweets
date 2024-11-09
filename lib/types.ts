@@ -12,9 +12,7 @@ export type Tweet = {
   source: string;
   text: string;
   urls: string[];
-  user: {
-    id: number;
-  };
+  user: User;
   media?: Media[];
   user_mentions: string[];
   extended_entities?: ExtendedEntities;
@@ -34,6 +32,19 @@ export type Tweet = {
   retweeted?: boolean;
   retweeted_status: Tweet | null;
   extended_tweet?: ExtendedTweet;
+};
+
+export type User = {
+  id: number;
+  name?: string;
+  created_at?: string;
+  description?: string;
+  favourites_count?: number;
+  followers_count?: number;
+  friends_count?: number;
+  profile_image_url_http?: string;
+  profile_image_url_https?: string;
+  screen_name?: string;
 };
 
 export type ExtendedTweet = {
