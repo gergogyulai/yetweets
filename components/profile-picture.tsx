@@ -1,128 +1,113 @@
-import { Tweet } from "@/lib/types";
-import Image from "next/image";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import Link from "next/link";
-import React from "react";
-import { extractProfileImageId, formattedLargeNumber } from "@/lib/utils";
+'use client'
 
-const fallbackProfilePictureId = "cqNhNk6v";
-const fallbackDisplayName = "Kanye West";
-const fallbackUsername = "@kanyewest";
+import React, { useMemo } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
+import { Tweet } from '@/lib/types'
+import { extractProfileImageId, formattedLargeNumber } from '@/lib/utils'
 
-const getProfileImageUrl = (tweet: Tweet): string => {
-  if (tweet.legacy_imported) {
-    return fallbackProfilePictureId;
-  }
-  return tweet.user?.profile_image_url_https
+const FALLBACK = {
+  PROFILE_PICTURE_ID: 'cqNhNk6v',
+  DISPLAY_NAME: 'Kanye West',
+  USERNAME: '@kanyewest',
+}
+
+interface ProfileData {
+  imageUrl: string
+  displayName: string
+  username: string
+  description?: string
+  friendsCount?: number
+  followersCount?: number
+  createdAt?: string
+}
+
+const getProfileData = (tweet: Tweet): ProfileData => ({
+  imageUrl: tweet.legacy_imported
+    ? FALLBACK.PROFILE_PICTURE_ID
+    : tweet.user?.profile_image_url_https
     ? extractProfileImageId(tweet.user.profile_image_url_https)
-    : fallbackProfilePictureId;
-};
+    : FALLBACK.PROFILE_PICTURE_ID,
+  displayName: tweet.user?.name || FALLBACK.DISPLAY_NAME,
+  username: tweet.user?.screen_name ? `@${tweet.user.screen_name}` : FALLBACK.USERNAME,
+  description: tweet.user?.description,
+  friendsCount: tweet.user?.friends_count,
+  followersCount: tweet.user?.followers_count,
+  createdAt: tweet.user?.created_at,
+})
 
-const getDisplayName = (tweet: Tweet): string => {
-  return tweet.user?.name || fallbackDisplayName;
-};
-
-const getUsername = (tweet: Tweet): string => {
-  return tweet.user?.screen_name
-    ? `@${tweet.user.screen_name}`
-    : fallbackUsername;
-};
-
-const ProfilePicture = ({ url }: { url: string }) => (
+const ProfilePicture: React.FC<{ url: string }> = React.memo(({ url }) => (
   <Image
     src={`https://lp7x2l6b4majf9v9.public.blob.vercel-storage.com/profile_images/${url}.jpg`}
     alt="Profile Picture"
     width={45}
     height={45}
     className="rounded-full"
+    loading="lazy"
   />
-);
+))
 
-const ProfileName = ({
-  displayName,
-  username,
-}: {
-  displayName: string;
-  username: string;
-}) => (
-  <div className="flex flex-col">
-    <span className="font-semibold leading-none tracking-tight">
-      {displayName}
-    </span>
-    <span className="text-sm text-muted-foreground">{username}</span>
+const ProfileName: React.FC<{ displayName: string; username: string }> = React.memo(
+  ({ displayName, username }) => (
+    <div className="flex flex-col">
+      <span className="font-semibold leading-none tracking-tight">{displayName}</span>
+      <span className="text-sm text-muted-foreground">{username}</span>
+    </div>
+  )
+)
+
+const InlineProfile: React.FC<{ profileData: ProfileData }> = React.memo(({ profileData }) => (
+  <div className="flex items-center gap-4">
+    <Link href="/archive" className="rounded-full">
+      <ProfilePicture url={profileData.imageUrl} />
+    </Link>
+    <Link href="/archive" className="hover:underline">
+      <ProfileName displayName={profileData.displayName} username={profileData.username} />
+    </Link>
   </div>
-);
+))
 
-const InlineProfile = ({ tweet }: { tweet: Tweet }) => {
-  const profileImageUrl = getProfileImageUrl(tweet);
-  const displayName = getDisplayName(tweet);
-  const username = getUsername(tweet);
-
-  return (
+const ProfileCard: React.FC<{ profileData: ProfileData }> = React.memo(({ profileData }) => (
+  <div className="flex flex-col gap-2">
     <div className="flex items-center gap-4">
-      <Link href="/archive" className="rounded-full">
-        <ProfilePicture url={profileImageUrl} />
-      </Link>
-      <Link href="/archive" className="hover:underline">
-        <ProfileName displayName={displayName} username={username} />
-      </Link>
+      <ProfilePicture url={profileData.imageUrl} />
+      <ProfileName displayName={profileData.displayName} username={profileData.username} />
     </div>
-  );
-};
-
-const ProfileCard = ({ tweet }: { tweet: Tweet }) => {
-  const profileImageUrl = getProfileImageUrl(tweet);
-  const displayName = getDisplayName(tweet);
-  const username = getUsername(tweet);
-
-  return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-center gap-4">
-        <ProfilePicture url={profileImageUrl} />
-        <ProfileName displayName={displayName} username={username} />
-      </div>
-      <div className="flex flex-col gap-2">
+      <span className="text-sm text-muted-foreground">{profileData.description || 'no bio.'}</span>
+      <div className="flex gap-2">
         <span className="text-sm text-muted-foreground">
-          {tweet.user?.description || "no bio."}
+          <span className="font-semibold">{formattedLargeNumber(profileData.friendsCount || 0)}</span> Following
         </span>
-        <div className="flex gap-2">
-          <span className="text-sm text-muted-foreground">
-            <span className="font-semibold">
-              {formattedLargeNumber(tweet.user?.friends_count || 0)}
-            </span>{" "}
-            Following
-          </span>
-          <span className="text-sm text-muted-foreground">
-            <span className="font-semibold">
-              {formattedLargeNumber(tweet.user?.followers_count || 0)}
-            </span>{" "}
-            Followers
-          </span>
-        </div>
-        {tweet.user?.created_at && (
-          <span className="text-sm text-muted-foreground">
-            Account created:{" "}
-            {new Date(tweet.user.created_at).toLocaleDateString()}
-          </span>
-        )}
+        <span className="text-sm text-muted-foreground">
+          <span className="font-semibold">{formattedLargeNumber(profileData.followersCount || 0)}</span> Followers
+        </span>
       </div>
+      {profileData.createdAt && (
+        <span className="text-sm text-muted-foreground">
+          Account created: {new Date(profileData.createdAt).toLocaleDateString()}
+        </span>
+      )}
     </div>
-  );
-};
+  </div>
+))
 
-export default function Profile({ tweet }: { tweet: Tweet }) {
+ProfileCard.displayName = 'ProfileCard'
+
+const Profile: React.FC<{ tweet: Tweet }> = ({ tweet }) => {
+  const profileData = useMemo(() => getProfileData(tweet), [tweet])
+
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <InlineProfile tweet={tweet} />
+        <InlineProfile profileData={profileData} />
       </HoverCardTrigger>
       <HoverCardContent className="w-80 max-w-lg select-none">
-        <ProfileCard tweet={tweet} />
+        <ProfileCard profileData={profileData} />
       </HoverCardContent>
     </HoverCard>
-  );
+  )
 }
+
+export default React.memo(Profile)
