@@ -26,6 +26,13 @@ const featuredTweets: MinimalTweet[] = [
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <div className="border-b bg-background/95 backdrop-blur-sm">
+        <div className="container mx-auto px-4 py-3">
+          <p className="text-center text-sm font-medium text-muted-foreground">
+            🔄 We are working on archiving his latest tweeting spree, latest tweets are coming soon!
+          </p>
+        </div>
+      </div>
       <main className="grow">
         <section className="relative bg-primary/5 py-24 md:py-32" id="hero">
           <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)]" />
@@ -42,7 +49,7 @@ export default function Home() {
                   Browse Archive
                 </Button>
               </Link>
-              <Link href="/highlights" passHref>
+              <Link href="/archive/highlights" passHref>
                 <Button size="lg" variant="outline" className="w-full text-lg sm:w-auto">
                   View Highlights
                 </Button>
@@ -62,7 +69,7 @@ export default function Home() {
 
         <section className="border-y bg-muted/50 py-16 md:py-24" id="featured-highlighted">
           <div className="container mx-auto px-4">
-            <Link href="/highlights" className="group" passHref>
+            <Link href="/archive/highlights" className="group" passHref>
               <h2 className="mb-10 text-center text-2xl font-semibold transition-colors hover:text-primary sm:text-3xl">
                 Featured Tweets
                 <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">→</span>
@@ -88,8 +95,7 @@ export default function Home() {
               ,{" "}
               <Link className="underline decoration-primary decoration-2 hover:text-primary" href="https://polititweet.org">
                 polititweet.org
-              </Link>
-              , and community-maintained spreadsheets.
+              </Link>, directly from twitter, and community-maintained spreadsheets.
             </p>
           </div>
         </section>

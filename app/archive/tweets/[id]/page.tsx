@@ -24,7 +24,7 @@ export const dynamicParams = true;
 export async function generateStaticParams() {
   const res = await fetch(`${VAULT_URL}/master.json`);
   const data = await res.json();
-
+  
   return data.map((tweet: { id_str: string }) => ({
     params: { id: tweet.id_str },
   }));
@@ -83,30 +83,21 @@ export async function generateMetadata(props: {
 
   const isTruncated = tweet.truncated;
   const isLegacyImported = tweet.legacy_imported;
-
   // @typescript-eslint/no-non-null-asserted-optional-chain
   // add back ! to tweet.extended_tweet?.full_text 89:7  Error: Optional chain expressions can return undefined by design - using a non-null assertion is unsafe and wrong.  @typescript-eslint/no-non-null-asserted-optional-chain
   const tweetText = isTruncated ? tweet.extended_tweet?.full_text : tweet.text;
-
   const media = isLegacyImported
     ? tweet.media
     : isTruncated
       ? tweet.extended_tweet?.extended_entities?.media
       : tweet.extended_entities?.media;
-
   const isPhoto = media?.[0]?.type === "photo";
-  const tweetMedia = isPhoto
-    ? getMediaUrl(extractMediaIdentifierFromUrl(media?.[0]?.media_url_https))
-    : null;
-  const tweetMediaAltText = isPhoto
-    ? `Archived image from tweet by ye`
-    : "Archived media from tweet";
+  const tweetMedia = isPhoto ? getMediaUrl(extractMediaIdentifierFromUrl(media?.[0]?.media_url_https)) : null;
+  const tweetMediaAltText = isPhoto ? `Archived image from tweet by ye` : "Archived media from tweet";
   const fallbackImage = "/og.png";
   const imageForMetadata = tweetMedia || fallbackImage;
   const tweetAuthor = "ye";
-  const tweetCreationDate = tweet?.created_at
-    ? new Date(tweet.created_at).toLocaleString("en-US", { timeZone: "UTC" })
-    : "Unknown date";
+  const tweetCreationDate = tweet?.created_at ? new Date(tweet.created_at).toLocaleString("en-US", { timeZone: "UTC" }) : "Unknown date";
 
   return {
     title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(removeTcoLink(tweetText || ""))}" | Ye Tweets Archive`,

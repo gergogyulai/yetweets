@@ -6,6 +6,10 @@ import Link from "next/link";
 import Script from "next/script";
 import { Geist_Mono } from "next/font/google";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList, NavigationMenuLink } from "@/components/ui/navigation-menu";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
+import { ModeToggle } from "@/components/theme-toggle";
 
 const geistMono = Geist_Mono({
   subsets: ["latin"],
@@ -13,7 +17,6 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
-
 
 export const metadata: Metadata = {
   title: "Ye Tweets Archive",
@@ -88,6 +91,7 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
+          storageKey="theme"
         >
           <div className="flex flex-col items-center font-mono">
             <div className="w-full">
@@ -98,7 +102,9 @@ export default function RootLayout({
                       <Link href="/" className="text-2xl font-bold hover:opacity-80 transition-opacity">
                         Ye Tweets
                       </Link>
-                      <NavigationMenu>
+                      
+                      {/* Desktop Navigation */}
+                      <NavigationMenu className="hidden md:flex">
                         <NavigationMenuList className="gap-2">
                           <NavigationMenuItem>
                             <Link href="/archive" legacyBehavior passHref>
@@ -108,21 +114,60 @@ export default function RootLayout({
                             </Link>
                           </NavigationMenuItem>
                           <NavigationMenuItem>
-                            <Link href="/highlights" legacyBehavior passHref>
+                            <Link href="/#statistics" legacyBehavior passHref>
                               <NavigationMenuLink className="px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none data-[active]:bg-accent/50 inline-flex items-center justify-center">
                                 Stats
                               </NavigationMenuLink>
                             </Link>
                           </NavigationMenuItem>
                           <NavigationMenuItem>
-                            <Link href="/stats" legacyBehavior passHref>
+                            <Link href="/highlights" legacyBehavior passHref>
                               <NavigationMenuLink className="px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none data-[active]:bg-accent/50 inline-flex items-center justify-center">
                                 Highlights
                               </NavigationMenuLink>
                             </Link>
                           </NavigationMenuItem>
+                          <NavigationMenuItem>
+                            <ModeToggle />
+                          </NavigationMenuItem>
                         </NavigationMenuList>
                       </NavigationMenu>
+
+                      {/* Mobile Navigation */}
+                      <div className="flex items-center gap-2 md:hidden">
+                        <ModeToggle />
+                        <Sheet>
+                          <SheetTrigger asChild>
+                            <Button variant="ghost" size="icon" className="md:hidden">
+                              <Menu className="h-5 w-5" />
+                              <span className="sr-only">Toggle menu</span>
+                            </Button>
+                          </SheetTrigger>
+                          <SheetContent side="right" className="w-[240px] sm:w-[300px]">
+                          <SheetTitle>Yetweets</SheetTitle>
+                            <nav className="flex flex-col gap-4 mt-4">
+                              <Link 
+                                href="/archive"
+                                className="py-2 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none"
+                              >
+                                Archive
+                              </Link>
+                              <Link 
+                                href="/#statistics"
+                                className="py-2 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none"
+                              >
+                                Stats
+                              </Link>
+                              <Link 
+                                href="/highlights"
+                                className="py-2 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none"
+                              >
+                                Highlights
+                              </Link>
+                            </nav>
+                          </SheetContent>
+                        </Sheet>
+                      </div>
                     </div>
                   </div>
                 </header>
