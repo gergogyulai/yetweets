@@ -41,7 +41,7 @@ export default function Home() {
               Ye Tweets Archive
             </h1>
             <p className="mx-auto mb-10 max-w-2xl text-lg text-muted-foreground sm:text-xl md:text-2xl">
-              A comprehensive archive of Kanye West's tweets, spanning his entire Twitter history up until 2023.
+              {"A comprehensive archive of Kanye West's tweets, spanning his entire Twitter history up until 2023."}
             </p>
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <Link href="/archive" passHref>
@@ -87,7 +87,7 @@ export default function Home() {
           <div className="container mx-auto px-4 text-center">
             <h2 className="mb-6 text-2xl font-semibold sm:text-3xl">About the Project</h2>
             <p className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg md:text-xl">
-              The Ye Tweets Archive is an effort to preserve Kanye West's Twitter history.
+              {"The Ye Tweets Archive is an effort to preserve Kanye West's Twitter history."}
               Our data comes from reliable sources including{" "}
               <Link className="underline decoration-primary decoration-2 hover:text-primary" href="https://archive.org/">
                 archive.org
