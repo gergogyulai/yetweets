@@ -13,14 +13,13 @@ import {
   TooltipTrigger,
   Tooltip,
 } from "@/components/ui/tooltip";
-import findEra, { allEras } from "@/lib/era";
+import findEra from "@/lib/era";
 import { VAULT_URL } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import InfoBar from "@/components/info-bar";
 import Profile from "@/components/profile-picture";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
@@ -29,15 +28,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -46,7 +36,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { FilterIcon, XIcon } from "lucide-react";
+import { FilterIcon } from "lucide-react";
 
 interface SearchParams {
   query?: string;
@@ -590,7 +580,7 @@ export default async function ArchivePage({
                 <CardContent className="flex flex-col items-center justify-center p-12">
                   <h3 className="mb-2 text-2xl font-semibold">No tweets found</h3>
                   <p className="text-center text-muted-foreground">
-                    Try adjusting your search filters to find what you're looking for.
+                    {"Try adjusting your search filters to find what you're looking for."}
                   </p>
                   <a href="/archive" className="mt-4 inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                     Reset All Filters
