@@ -240,31 +240,23 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
 }
 
 export default async function ArchivePage({
+  params,
   searchParams,
 }: {
-  searchParams: {
-    query?: string;
-    startDate?: string;
-    endDate?: string;
-    hasImages?: string;
-    hasVideos?: string;
-    era?: string;
-  };
+  params: Record<string, string>;
+  searchParams: Record<string, string | string[] | undefined>;
 }) {
   const data = await fetchTweets();
   const erasList = await getEras();
   
-  // We need to await searchParams before accessing its properties
-  const params = await searchParams;
-  
-  // Extract search params
+  // Extract search params directly
   const extractedParams: SearchParams = {
-    query: params.query,
-    startDate: params.startDate,
-    endDate: params.endDate,
-    hasImages: params.hasImages,
-    hasVideos: params.hasVideos,
-    era: params.era
+    query: typeof searchParams.query === 'string' ? searchParams.query : undefined,
+    startDate: typeof searchParams.startDate === 'string' ? searchParams.startDate : undefined,
+    endDate: typeof searchParams.endDate === 'string' ? searchParams.endDate : undefined,
+    hasImages: typeof searchParams.hasImages === 'string' ? searchParams.hasImages : undefined,
+    hasVideos: typeof searchParams.hasVideos === 'string' ? searchParams.hasVideos : undefined,
+    era: typeof searchParams.era === 'string' ? searchParams.era : undefined
   };
   
   const filteredData = filterTweets(data, extractedParams);
