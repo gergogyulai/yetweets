@@ -121,7 +121,7 @@ export default function RootLayout({
                             </Link>
                           </NavigationMenuItem>
                           <NavigationMenuItem>
-                            <Link href="/highlights" legacyBehavior passHref>
+                            <Link href="/archive/highlights" legacyBehavior passHref>
                               <NavigationMenuLink className="px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none data-[active]:bg-accent/50 inline-flex items-center justify-center">
                                 Highlights
                               </NavigationMenuLink>
@@ -159,7 +159,7 @@ export default function RootLayout({
                                 Stats
                               </Link>
                               <Link 
-                                href="/highlights"
+                                href="/archive/highlights"
                                 className="py-2 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none"
                               >
                                 Highlights

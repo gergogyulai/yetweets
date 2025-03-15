@@ -4,26 +4,39 @@ import { Button } from "@/components/ui/button";
 import { GithubIcon } from "lucide-react";
 import FeaturedTweetCard from "@/components/featured-tweet";
 import TwitterArchiveStats from "@/components/tweet-archive-stats";
+import { Tweet } from "@/lib/types";
+import { VAULT_URL } from "@/lib/utils";
 
-const featuredTweets: MinimalTweet[] = [
-  {
-    created_at: "Fri Jul 27 21:12:18 +0000 2018",
-    id_str: "1022952843563556864",
-    text: "How to NOT kill yourself pt 1\n\nAvoid being around people who make you want to kill yourself",
-  },
-  {
-    created_at: "Thu Jun 14 12:33:51 +0000 2018",
-    id_str: "1007239693291773952",
-    text: "your pride can be and will be used against you",
-  },
-  {
-    created_at: "Thu Apr 26 17:20:53 +0000 2018",
-    id_str: "989554923074240512",
-    text: "my friend said he texted all his friends this morning and said I love you",
-  },
-];
+export const dynamic = 'force-static';
 
-export default function Home() {
+const featuredTweetIds = ["1022952843563556864", "1007239693291773952", "1323476766439038976", "1323479840121450497", "1073418915445948416", "1018257129457606656"];
+
+async function getData(id: string): Promise<Tweet | null> {
+  try {
+    const res = await fetch(`${VAULT_URL}/tweets/${id}.json`, {
+      cache: 'force-cache'
+    });
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    return await res.json();
+  } catch (error) {
+    console.error("Failed to fetch tweet:", error);
+    return null;
+  }
+}
+
+
+export async function generateStaticParams() {
+  return [{}];
+}
+
+async function fetchFeaturedTweets(tweetIds: string[]): Promise<(Tweet | null)[]> {
+  const tweets = await Promise.all(tweetIds.map(id => getData(id)));
+  return tweets;
+}
+
+export default async function Home() {
+  const featuredTweets = await fetchFeaturedTweets(featuredTweetIds);
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <div className="border-b bg-background/95 backdrop-blur-sm">
@@ -76,7 +89,7 @@ export default function Home() {
               </h2>
             </Link>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {featuredTweets.map((tweet) => (
+              {featuredTweets.filter((tweet): tweet is Tweet => tweet !== null).map((tweet: Tweet) => (
                 <FeaturedTweetCard key={tweet.id_str} tweet={tweet} />
               ))}
             </div>
