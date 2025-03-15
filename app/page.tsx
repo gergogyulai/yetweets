@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { MinimalTweet } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { GithubIcon } from "lucide-react";
 import FeaturedTweetCard from "@/components/featured-tweet";
