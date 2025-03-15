@@ -17,6 +17,7 @@ import { VAULT_URL } from "@/lib/utils";
 import TweetRendererV2 from "@/components/tweet-renderer";
 import InfoBar from "@/components/info-bar";
 import Profile from "@/components/profile-picture";
+import { ArchiveIcon, ExternalLink } from "lucide-react";
 
 export const dynamic = "force-static";
 export const dynamicParams = true;
@@ -24,7 +25,7 @@ export const dynamicParams = true;
 export async function generateStaticParams() {
   const res = await fetch(`${VAULT_URL}/master.json`);
   const data = await res.json();
-  
+
   return data.map((tweet: { id_str: string }) => ({
     params: { id: tweet.id_str },
   }));
@@ -92,12 +93,18 @@ export async function generateMetadata(props: {
       ? tweet.extended_tweet?.extended_entities?.media
       : tweet.extended_entities?.media;
   const isPhoto = media?.[0]?.type === "photo";
-  const tweetMedia = isPhoto ? getMediaUrl(extractMediaIdentifierFromUrl(media?.[0]?.media_url_https)) : null;
-  const tweetMediaAltText = isPhoto ? `Archived image from tweet by ye` : "Archived media from tweet";
+  const tweetMedia = isPhoto
+    ? getMediaUrl(extractMediaIdentifierFromUrl(media?.[0]?.media_url_https))
+    : null;
+  const tweetMediaAltText = isPhoto
+    ? `Archived image from tweet by ye`
+    : "Archived media from tweet";
   const fallbackImage = "/og.png";
   const imageForMetadata = tweetMedia || fallbackImage;
   const tweetAuthor = "ye";
-  const tweetCreationDate = tweet?.created_at ? new Date(tweet.created_at).toLocaleString("en-US", { timeZone: "UTC" }) : "Unknown date";
+  const tweetCreationDate = tweet?.created_at
+    ? new Date(tweet.created_at).toLocaleString("en-US", { timeZone: "UTC" })
+    : "Unknown date";
 
   return {
     title: `Archived Tweet by ${tweetAuthor}: "${gracefullyTruncate(removeTcoLink(tweetText || ""))}" | Ye Tweets Archive`,
@@ -180,14 +187,28 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           </div>
         </CardFooter>
       </Card>
-      <div className="mt-4 flex flex-col gap-4">
+      <div className="mt-4 flex flex-row gap-4">
         <Link
           href={`${VAULT_URL}/tweets/${params.id}.json`}
           target="_blank"
           className="block"
         >
           <Button asChild size="lg" variant={"outline"}>
-            <span>View Raw JSON</span>
+            <div className="flex gap-2">
+              <ExternalLink size={18} />
+              <span>View Raw JSON</span>
+            </div>
+          </Button>
+        </Link>
+        <Link
+          href={`https://web.archive.org/web/*/https://twitter.com/kanyewest/status/${tweet.id_str}`}
+          target="_blank"
+        >
+          <Button asChild size="lg" variant={"outline"}>
+            <div className="flex gap-2">
+              <ArchiveIcon size={18} />
+              <span className="">Open Wayback Machine</span>
+            </div>
           </Button>
         </Link>
       </div>

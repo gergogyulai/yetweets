@@ -23,7 +23,6 @@ async function getData(id: string): Promise<Tweet | null> {
   }
 }
 
-
 export async function generateStaticParams() {
   return [{}];
 }

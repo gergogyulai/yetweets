@@ -179,6 +179,9 @@ const eras: Era[] = [
   { name: "Bully", start: new Date("09/03/2024"), end: undefined }, // ongoing
 ];
 
+// Export the eras array to make it accessible
+export const allEras = eras;
+
 export default function findEra(date: Date): string[] {
   const activeEras = eras.filter((era) => {
     return (!era.end || era.end >= date) && era.start <= date;
